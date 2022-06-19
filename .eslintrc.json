@@ -1,0 +1,41 @@
+{
+  "extends": [
+    // "eslint:recommended",
+    // "plugin:vue/base",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:vue/vue3-essential",
+    "plugin:vue/vue3-strongly-recommended"
+    // "plugin:vue/vue3-recommended"
+  ],
+  "rules": {
+    "vue/multi-word-component-names": 0,
+    "semi": "off",
+    "@typescript-eslint/semi": ["warn", "never"],
+    "vue/component-api-style": ["error", ["script-setup", "composition"]],
+    "vue/max-attributes-per-line": [
+      "warn",
+      {
+        "singleline": {
+          "max": 5
+        },
+        "multiline": {
+          "max": 1
+        }
+      }
+    ],
+    "vue/singleline-html-element-content-newline": [
+      "warn",
+      {
+        "ignoreWhenNoAttributes": true,
+        "ignoreWhenEmpty": true
+      }
+    ]
+  },
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "parser": "@typescript-eslint/parser",
+    "sourceType": "module"
+  },
+  "ignorePatterns": ["**/swagger-client/*.ts"]
+}
