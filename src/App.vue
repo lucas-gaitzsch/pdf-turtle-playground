@@ -39,6 +39,13 @@
       </q-list>
 
       <q-list>
+        <q-item class="item" href="https://github.com/lucas-gaitzsch/pdf-turtle" target="_blank">
+          <q-item-section avatar>
+            <q-icon :name="mdiGithub" />
+          </q-item-section>
+          <q-item-section>Github</q-item-section>
+        </q-item>
+        <q-separator />
         <q-item clickable class="item" @click="toggleTheme()">
           <q-item-section avatar>
             <q-icon v-if="!themeIsDark" :name="mdiWeatherSunny" />
@@ -108,6 +115,7 @@ import {
   mdiWeatherNight,
   mdiInformationOutline,
   mdiTortoise,
+  mdiGithub,
 } from "@quasar/extras/mdi-v6"
 
 const localStorageIsDarkThemeKey = "isDarkMode"
@@ -155,6 +163,7 @@ export default defineComponent({
       mdiWeatherNight,
       mdiInformationOutline,
       mdiTortoise,
+      mdiGithub,
     }
   },
 })
