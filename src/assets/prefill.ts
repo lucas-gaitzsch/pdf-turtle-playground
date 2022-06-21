@@ -38,6 +38,10 @@ export const template = `
 				<div class="card-head">Sales per week</div>
 				<div class="card-body">{{ .summery.salesPerWeek }}</div>
 			</div>
+			<div class="card">
+				<div class="card-head">Sales per week</div>
+				<div class="card-body">{{ .summery.performanceIndex }}</div>
+			</div>
 		</div>
 
 		<table class="reduced" style="margin-top: 8mm">
@@ -64,7 +68,7 @@ export const template = `
 					<td>{{ .status }}</td>
 				</tr>
 			{{end}}
-      
+
 		</table>
 	</body>
 </html>
@@ -79,11 +83,12 @@ export const template = `
 `.trimStart()
 
 export const model = {
-  title: "Test PDF Report - Hello World",
+  title: "PdfTurtle _🐢_ TestReport",
   heading: "Sales Overview",
   summery: {
     totalSales: "3243993",
     salesPerWeek: "9832",
+    performanceIndex: "5",
   },
   sales: [
     {

@@ -56,9 +56,15 @@
       </object>
       <div v-else class="loading-wrapper">
         <q-circular-progress v-if="isLoading" indeterminate size="xl" />
-        <h4 v-else-if="hasError">
-          Unknown Error :'[
-        </h4>
+        <div v-else-if="hasError" style="text-align: center">
+          <q-icon :name="mdiTurtle" size="xl" />
+          <h4 style="margin-top: 20px">
+            Error :'[
+          </h4>
+          <div>{{ errMsg?.msg }}</div>
+          <div>{{ errMsg?.err }}</div>
+          <div>{{ errMsg?.requestId }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -75,9 +81,12 @@ import {
 import HtmlEditor from "@/components/base-editors/HtmlEditor.vue"
 import JsonEditor from "@/components/base-editors/JsonEditor.vue"
 import Margins from "@/components/option-inputs/Margins.vue"
+import { RequestError } from "@/models/request-error"
 
 import { AxiosError, CanceledError } from "axios"
 import { model, template } from "@/assets/prefill"
+
+import { mdiTurtle } from "@quasar/extras/mdi-v6"
 
 const renderTemplateData = reactive<RenderTemplateData>({
   templateEngine: EnumRenderTemplateDataTemplateEngine.golang,
@@ -104,7 +113,7 @@ const pdfDataUrl = ref("")
 
 const isLoading = ref(0)
 const hasError = computed(() => isLoading.value === 0 && pdfDataUrl.value === "")
-const errMsg = ref("")
+const errMsg = ref<RequestError | null>(null)
 
 const requestTimeInMs = ref(0)
 
@@ -124,6 +133,7 @@ const requestPdf = async () => {
   try {
     isLoading.value++
     pdfDataUrl.value = ""
+    errMsg.value = null
 
     const startTime = new Date().getTime()
 
@@ -143,9 +153,10 @@ const requestPdf = async () => {
       console.log("request was canceled")
     } else {
       if (e instanceof AxiosError) {
-        errMsg.value = e.message
+        const responseText: string = await e.response?.data.text()
+        errMsg.value = JSON.parse(responseText) as RequestError
       }
-      console.warn(e)
+      console.warn("request err", e)
     }
   } finally {
     isLoading.value--
