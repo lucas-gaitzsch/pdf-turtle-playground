@@ -80,7 +80,7 @@ import { AxiosError, CanceledError } from "axios"
 import { model, template } from "@/assets/prefill"
 
 const renderTemplateData = reactive<RenderTemplateData>({
-  templateEngine: EnumRenderTemplateDataTemplateEngine.handlebars,
+  templateEngine: EnumRenderTemplateDataTemplateEngine.golang,
   htmlTemplate: template,
   model: JSON.stringify(model, null, 2),
   options: {
