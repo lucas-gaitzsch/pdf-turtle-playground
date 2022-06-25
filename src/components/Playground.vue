@@ -36,7 +36,7 @@
       <div class="code-container">
         <html-editor v-model="renderTemplateData.htmlTemplate" class="editor" :no-handlebars="true" />
       </div>
-      <div class="code-container small">
+      <div class="code-container">
         <json-editor v-model="renderTemplateData.model" class="editor" />
       </div>
     </div>
@@ -185,8 +185,10 @@ watch(renderTemplateData, () => requestPdf())
     padding-top: 4px;
     padding-left: 4px;
     width: 50%;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: minmax(100px, auto);
+    grid-template-rows: auto 2fr 1fr;
 
     .options-container {
       display: flex;
@@ -203,11 +205,6 @@ watch(renderTemplateData, () => requestPdf())
     }
 
     .code-container {
-      flex: 3;
-
-      &.small {
-        flex: 2;
-      }
     }
   }
   .pdf-container {

@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf" class="fit-in-view-height">
     <q-drawer
       :model-value="true"
       side="left"
@@ -62,8 +62,9 @@
         </q-item>
       </q-list>
     </q-drawer>
-    <q-page-container>
-      <q-page>
+
+    <q-page-container class="fit-in-view-height">
+      <q-page class="fit-in-view-height">
         <router-view />
       </q-page>
     </q-page-container>
@@ -71,6 +72,10 @@
 </template>
 
 <style lang="scss">
+.fit-in-view-height {
+  height: 100vh;
+}
+
 .drawer {
   display: flex;
   flex-direction: column;
