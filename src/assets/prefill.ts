@@ -4,7 +4,7 @@ export const template = `
 <PdfHeader>
 	<style>
 		.header-container {
-			margin-top: 5mm;
+			padding-top: 5mm;
 			display: flex;
 			align-items:center;
 			gap: 4mm;
@@ -52,7 +52,7 @@ export const template = `
 			<canvas id="myChart" height="70"></canvas>
 		</div>
 		
-		<img style="width:100%; height: 4cm; object-fit: cover; border-radius:5mm" src="https://pixabay.com/get/gaa4415d97540229c77e324e25c9f8901fe84fb11d0dad326c2f9fc66fa0fde3d89db9c045dbc9485da58d1e3620b4b8a7c0a6095b3e7432878b7298b258bd6423da3cf930e6ccb4578398221511735ce_1280.jpg"/>
+		<img style="width:100%; height: 4cm; object-fit: cover; border-radius:5mm" src="https://images.unsplash.com/photo-1543286386-2e659306cd6c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"/>
 		
 		<table class="reduced" style="margin-top: 3mm">
 			<tr>
@@ -126,7 +126,7 @@ export const template = `
 <!--
 <PdfFooter>
 	<div class="default-footer">
-		<span class="pageNumber"></span> of <span class="totalPages"></span> pages
+    <div><span class="pageNumber"></span> of <span class="totalPages"></span> pages</div>
 	</div>
 </PdfFooter>
 -->
