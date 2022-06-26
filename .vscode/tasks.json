@@ -11,8 +11,8 @@
           "regexp": ""
         },
         "background": {
-          "beginsPattern": "vite",
-          "endsPattern": "ready in"
+          "beginsPattern": "vite$",
+          "endsPattern": "ready in|[vite] hmr update"
         }
       }
     }

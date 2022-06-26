@@ -6,121 +6,163 @@ export const template = `
 		.header-container {
 			padding-top: 5mm;
 			display: flex;
-			align-items:center;
+			align-items: center;
 			gap: 4mm;
 		}
 	</style>
 	<div class="header-container">
 		<svg style="width:1cm; height:1cm;" viewBox="0 0 24 24">
-			<path fill="currentColor" d="M5,19A1,1 0 0,0 6,20H18A1,1 0 0,0 19,19C19,18.79 18.93,18.59 18.82,18.43L13,8.35V4H11V8.35L5.18,18.43C5.07,18.59 5,18.79 5,19M6,22A3,3 0 0,1 3,19C3,18.4 3.18,17.84 3.5,17.37L9,7.81V6A1,1 0 0,1 8,5V4A2,2 0 0,1 10,2H14A2,2 0 0,1 16,4V5A1,1 0 0,1 15,6V7.81L20.5,17.37C20.82,17.84 21,18.4 21,19A3,3 0 0,1 18,22H6M13,16L14.34,14.66L16.27,18H7.73L10.39,13.39L13,16M12.5,12A0.5,0.5 0 0,1 13,12.5A0.5,0.5 0 0,1 12.5,13A0.5,0.5 0 0,1 12,12.5A0.5,0.5 0 0,1 12.5,12Z" />
+			<path fill="currentColor"
+				d="M5,19A1,1 0 0,0 6,20H18A1,1 0 0,0 19,19C19,18.79 18.93,18.59 18.82,18.43L13,8.35V4H11V8.35L5.18,18.43C5.07,18.59 5,18.79 5,19M6,22A3,3 0 0,1 3,19C3,18.4 3.18,17.84 3.5,17.37L9,7.81V6A1,1 0 0,1 8,5V4A2,2 0 0,1 10,2H14A2,2 0 0,1 16,4V5A1,1 0 0,1 15,6V7.81L20.5,17.37C20.82,17.84 21,18.4 21,19A3,3 0 0,1 18,22H6M13,16L14.34,14.66L16.27,18H7.73L10.39,13.39L13,16M12.5,12A0.5,0.5 0 0,1 13,12.5A0.5,0.5 0 0,1 12.5,13A0.5,0.5 0 0,1 12,12.5A0.5,0.5 0 0,1 12.5,12Z" />
 		</svg>
 		<h2>{{ .title }}</h2>
 	</div>
 </PdfHeader>
 
 <html>
-	<head>
-		<style>
-			.unbold-heading {
-				font-weight: normal;
-			}
-		</style>
-	</head>
-	<body class="pdf-turtle">
-		<h2 class="unbold-heading">{{ .heading }}</h2>
 
-		<div class="cards-wrapper">
-			<div class="card" style="background-color: rgba(84,255,0,0.2)">
-				<div class="card-head">Total sales</div>
-				<div class="card-body">{{ .summery.totalSales }}</div>
-			</div>
-			<div class="card">
-				<div class="card-head">Sales per week</div>
-				<div class="card-body">{{ .summery.salesPerWeek }}</div>
-			</div>
-			<div class="card">
-				<div class="card-head">Performance index</div>
-				<div class="card-body">{{ .summery.performanceIndex }} %</div>
-			</div>
-			<div class="card">
-				<div class="card-head">Sales volume last year</div>
-				<div class="card-body">{{ .summery.salesVolume }} $</div>
-			</div>
+<head>
+	<style>
+		.unbold-heading {
+			font-weight: normal;
+		}
+	</style>
+</head>
+
+<body class="pdf-turtle">
+	<h3 class="unbold-heading">{{ .heading }}</h3>
+
+	<div class="cards-wrapper">
+		<div class="card" style="background-color: rgba(84,255,0,0.2)">
+			<div class="card-head">Total sales</div>
+			<div class="card-body">{{ .summery.totalSales }}</div>
 		</div>
-
-		<div style="padding: 5mm 0">
-			<canvas id="myChart" height="70"></canvas>
+		<div class="card">
+			<div class="card-head">Sales per week</div>
+			<div class="card-body">{{ .summery.salesPerWeek }}</div>
 		</div>
-		
-		<img style="width:100%; height: 4cm; object-fit: cover; border-radius:5mm" src="https://images.unsplash.com/photo-1543286386-2e659306cd6c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"/>
-		
-		<table class="reduced" style="margin-top: 3mm">
-			<tr>
-				<th>Order No.</th>
-				<th>Product Line</th>
-				<th>Product Code</th>
-				<th>Customer Name</th>
-				<th>Country</th>
-				<th>Ordered Quanitiy</th>
-				<th>Price Each</th>
-				<th>Status</th>
-			</tr>
+		<div class="card">
+			<div class="card-head">Performance index</div>
+			<div class="card-body">{{ .summery.performanceIndex }} %</div>
+		</div>
+		<div class="card">
+			<div class="card-head">Sales volume last year</div>
+			<div class="card-body">{{ .summery.salesVolume }} $</div>
+		</div>
+	</div>
 
-			{{range .sales}}
-				<tr>
-					<td class="nowrap right">{{ .orderNumber }}</td>
-					<td>{{ .productLine }}</td>
-					<td>{{ .productCode }}</td>
-					<td>{{ .customerName }}</td>
-					<td>{{ .country }}</td>
-					<td  class="nowrap right">{{ .quantityOrdered }}</td>
-					<td class="nowrap right">{{ .priceEach }} $</td>
-					<td>{{ .status }}</td>
-				</tr>
-			{{end}}
-		</table>
+	<div id="echart-container" style="padding: 5mm 0; width:100%; height:6cm;">
+	</div>
 
-		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-		<script>
-				const labels = [
-				'January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-			];
+	<img style="width:100%; height: 4cm; object-fit: cover; border-radius:5mm" src="https://images.unsplash.com/photo-1543286386-2e659306cd6c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"/>
 
-			const data = {
-				labels: labels,
-				datasets: [{
-					label: 'My First dataset',
-					backgroundColor: 'rgba(255, 99, 32, 0.5)',
-					data: [650, 590, 802, 819, 564, 556, 405],
-					fill: true,
-					borderColor: 'rgba(175, 92, 80, 0.7)',
-					tension: 0.1,
-					animation: false,
-				}]
-			};
+	<table class="reduced" style="margin-top:3mm; font-size:10pt;">
+		<tr>
+			<th>Order No.</th>
+			<th>Product Line</th>
+			<th>Customer Name</th>
+			<th>Country</th>
+			<th>Ordered Quanitiy</th>
+			<th>Price Each</th>
+			<th>Status</th>
+		</tr>
 
-			const config = {
-				type: 'line',
-				data: data,
-				options: {
-					plugins: {
-						legend: { display: false }
-					}
+		{{range .sales}}
+		<tr class="no-page-break-inside">
+			<td class="nowrap right">{{ .orderNumber }}</td>
+			<td>{{ .productLine }}</td>
+			<td>{{ .customerName }}</td>
+			<td>{{ .country }}</td>
+			<td class="nowrap right">{{ .quantityOrdered }}</td>
+			<td class="nowrap right">{{ .priceEach }} $</td>
+			<td>{{ .status }}</td>
+		</tr>
+		{{end}}
+	</table>
+
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
+	<script>
+		var eChart = echarts.init(document.getElementById('echart-container'), null, { renderer: 'svg' });
+		var option = {
+			animation: false,
+			color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
+			grid: {
+				top: '4mm',
+				left: 0,
+				right: 0,
+				bottom: 0,
+				containLabel: true,
+			},
+			xAxis: [
+				{
+					type: 'category',
+					boundaryGap: false,
+					data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 				}
-			};
+			],
+			yAxis: [ { type: 'value' } ],
+			series: [
+				{
+					name: 'Line 1',
+					type: 'line',
+					stack: 'Total',
+					smooth: true,
+					lineStyle: {
+						width: 0
+					},
+					showSymbol: false,
+					areaStyle: {
+						opacity: 0.8,
+						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+							{ offset: 0, color: 'rgb(128, 255, 165)' },
+							{ offset: 1, color: 'rgb(1, 191, 236)' },
+						])
+					},
+					data: {{ marshal .chartData.line1 }} // injected JSON from model
+				},
+				{
+					name: 'Line 2',
+					type: 'line',
+					stack: 'Total',
+					smooth: true,
+					lineStyle: {
+						width: 0
+					},
+					showSymbol: false,
+					areaStyle: {
+						opacity: 0.8,
+						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+							{ offset: 0, color: 'rgb(55, 162, 255)' },
+							{ offset: 1, color: 'rgb(116, 21, 219)' },
+						])
+					},
+					data: {{ marshal .chartData.line2 }} // injected JSON from model
+				},
+				{
+					name: 'Line 3',
+					type: 'line',
+					stack: 'Total',
+					smooth: true,
+					lineStyle: {
+						width: 0
+					},
+					showSymbol: false,
+					areaStyle: {
+						opacity: 0.8,
+						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+							{ offset: 0, color: 'rgb(255, 191, 0)' },
+							{ offset: 1, color: 'rgb(224, 62, 76)' },
+						])
+					},
+					data: {{ marshal .chartData.line3 }} // injected JSON from model 
+				}
+			]
+		};
+		eChart.setOption(option);
+	</script>
 
-			const myChart = new Chart(
-				document.getElementById('myChart'),
-				config
-			);
-		</script>
-	</body>
+</body>
+
 </html>
 
 <!--
@@ -135,6 +177,11 @@ export const template = `
 export const model = {
   title: "PdfTurtle _🐢_ TestReport",
   heading: "Sales Overview",
+  chartData: {
+    line1: [140, 232, 101, 264, 90, 340, 250],
+    line2: [320, 132, 201, 334, 190, 130, 220],
+    line3: [220, 302, 181, 234, 210, 290, 150],
+  },
   summery: {
     totalSales: 32993,
     salesPerWeek: 82,
