@@ -16,6 +16,11 @@ export const template = `
 				d="M5,19A1,1 0 0,0 6,20H18A1,1 0 0,0 19,19C19,18.79 18.93,18.59 18.82,18.43L13,8.35V4H11V8.35L5.18,18.43C5.07,18.59 5,18.79 5,19M6,22A3,3 0 0,1 3,19C3,18.4 3.18,17.84 3.5,17.37L9,7.81V6A1,1 0 0,1 8,5V4A2,2 0 0,1 10,2H14A2,2 0 0,1 16,4V5A1,1 0 0,1 15,6V7.81L20.5,17.37C20.82,17.84 21,18.4 21,19A3,3 0 0,1 18,22H6M13,16L14.34,14.66L16.27,18H7.73L10.39,13.39L13,16M12.5,12A0.5,0.5 0 0,1 13,12.5A0.5,0.5 0 0,1 12.5,13A0.5,0.5 0 0,1 12,12.5A0.5,0.5 0 0,1 12.5,12Z" />
 		</svg>
 		<h2>{{ .title }}</h2>
+		
+		<div style="flex-grow: 1;"><!-- SPACER --></div>
+		<div style="height: 1.6cm; width: 1.6cm">
+			{{barcodeQr "https://github.com/lucas-gaitzsch/pdf-turtle"}}
+		</div>
 	</div>
 </PdfHeader>
 
@@ -51,7 +56,7 @@ export const template = `
 		</div>
 	</div>
 
-	<div id="echart-container" style="padding: 5mm 0; width:100%; height:6cm;">
+	<div id="echart-container" style="margin: 5mm 0; width:100%; height:6cm;">
 	</div>
 
 	<img style="width:100%; height: 4cm; object-fit: cover; border-radius:5mm" src="https://images.unsplash.com/photo-1543286386-2e659306cd6c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"/>
@@ -87,7 +92,7 @@ export const template = `
 			animation: false,
 			color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
 			grid: {
-				top: '4mm',
+				top: '6mm',
 				left: 0,
 				right: 0,
 				bottom: 0,

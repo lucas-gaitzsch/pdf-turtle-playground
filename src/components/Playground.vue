@@ -186,11 +186,12 @@ watch(renderTemplateData, () => requestPdf())
     padding-left: 4px;
     width: 50%;
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
     grid-auto-rows: minmax(100px, auto);
     grid-template-rows: auto 2fr 1fr;
 
     .options-container {
+      width: 100%;
       display: flex;
 
       .runtime-container {
