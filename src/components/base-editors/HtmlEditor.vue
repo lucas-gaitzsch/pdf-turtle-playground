@@ -24,4 +24,8 @@ watch(
 )
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.monaco-editor {
+  position: absolute !important;
+}
+</style>

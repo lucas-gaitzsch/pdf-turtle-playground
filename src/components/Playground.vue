@@ -1,45 +1,44 @@
 <template>
   <div class="layout-wrapper">
-    <div class="source-container">
-      <q-card flat bordered class="options-container">
-        <q-card-section class="row">
-          <q-select
-            v-model="renderTemplateData.options!.pageFormat"
-            :options="pageSizes"
-            label="Page size"
-            dense
-            outlined
-            style="min-width: 120px"
-          />
-          <q-select
-            v-model="renderTemplateData.templateEngine"
-            :options="templateEngines"
-            label="Template engine"
-            dense
-            outlined
-            style="min-width: 120px"
-          />
+    <q-card flat bordered class="options-container">
+      <q-card-section class="row">
+        <q-select
+          v-model="renderTemplateData.options!.pageFormat"
+          :options="pageSizes"
+          label="Page size"
+          dense
+          outlined
+          style="min-width: 120px"
+        />
+        <q-select
+          v-model="renderTemplateData.templateEngine"
+          :options="templateEngines"
+          label="Template engine"
+          dense
+          outlined
+          style="min-width: 120px"
+        />
 
-          <q-btn label="Margins" flat>
-            <q-menu>
-              <margins v-model="marginsProxy" />
-            </q-menu>
-          </q-btn>
+        <q-btn label="Margins" flat>
+          <q-menu>
+            <margins v-model="marginsProxy" />
+          </q-menu>
+        </q-btn>
 
-          <q-toggle v-model="renderTemplateData.options!.landscape" label="Landscape" />
-        </q-card-section>
-        <q-card-section v-if="requestTimeInMs" class="runtime-container">
-          <span>{{ requestTimeInMs }} ms</span>
-        </q-card-section>
-      </q-card>
+        <q-toggle v-model="renderTemplateData.options!.landscape" label="Landscape" />
+      </q-card-section>
+      <q-card-section v-if="requestTimeInMs" class="runtime-container">
+        <span>{{ requestTimeInMs }} ms</span>
+      </q-card-section>
+    </q-card>
 
-      <div class="code-container">
-        <html-editor v-model="renderTemplateData.htmlTemplate" class="editor" :no-handlebars="true" />
-      </div>
-      <div class="code-container">
-        <json-editor v-model="renderTemplateData.model" class="editor" />
-      </div>
+    <div class="code-container template">
+      <html-editor v-model="renderTemplateData.htmlTemplate" class="editor" :no-handlebars="true" />
     </div>
+    <div class="code-container model">
+      <json-editor v-model="renderTemplateData.model" class="editor" />
+    </div>
+
     <div class="pdf-container">
       <object v-if="!isLoading && !hasError" type="application/pdf" :data="pdfDataUrl" class="pdf-viewer">
         <div class="ma-8" style="box-sizing: border-box">
@@ -172,44 +171,69 @@ watch(renderTemplateData, () => requestPdf())
 .layout-wrapper {
   min-height: inherit;
   height: 100%;
-  display: flex;
-  flex-direction: row;
-  background-color: #80808027;
+  background-color: #a1a1a147;
 
-  &,
-  * {
-    gap: 4px;
+  display: grid;
+  grid-template-columns: 10fr 8fr;
+  // grid-auto-rows: minmax(100px, auto);
+  grid-template-rows: min-content 2fr 1fr;
+
+  grid-template-areas:
+    "options  pdf"
+    "template pdf"
+    "model    pdf";
+
+  @media only screen and (max-width: 1200px) {
+    grid-template-columns: 1fr 1fr;
   }
 
-  .source-container {
-    padding-top: 4px;
-    padding-left: 4px;
-    width: 50%;
-    display: grid;
-    grid-template-columns: 100%;
-    grid-auto-rows: minmax(100px, auto);
-    grid-template-rows: auto 2fr 1fr;
+  // @media only screen and (max-width: 1000px) {
+  //   // height: auto;
+  //   grid-template-columns: 1fr;
+  //   grid-template-rows: min-content 400px 300px 500px;
+  //   grid-template-areas:
+  //     "options"
+  //     "template"
+  //     "model"
+  //     "pdf";
+  // }
 
-    .options-container {
-      width: 100%;
+  gap: 4px;
+
+  .options-container {
+    grid-area: options;
+
+    display: flex;
+
+    margin-left: 2px;
+    margin-top: 2px;
+
+    * {
+      gap: 4px;
+    }
+
+    .runtime-container {
       display: flex;
+      margin-left: auto;
+      align-items: center;
 
-      .runtime-container {
-        display: flex;
-        margin-left: auto;
-        align-items: center;
-
-        span {
-          text-align: right;
-        }
+      span {
+        text-align: right;
       }
     }
+  }
 
-    .code-container {
+  .code-container {
+    &.template {
+      grid-area: template;
+    }
+    &.model {
+      grid-area: model;
     }
   }
+
   .pdf-container {
-    flex: 1;
+    grid-area: pdf;
 
     .loading-wrapper {
       height: 100%;
