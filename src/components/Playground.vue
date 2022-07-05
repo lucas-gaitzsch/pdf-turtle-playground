@@ -40,7 +40,20 @@
     </div>
 
     <div class="pdf-container">
-      <object v-if="!isLoading && !hasError" type="application/pdf" :data="pdfDataUrl" class="pdf-viewer">
+      <div v-if="isLoading || hasError" class="loading-wrapper">
+        <q-circular-progress v-if="isLoading" indeterminate size="xl" />
+        <div v-else-if="hasError" style="text-align: center">
+          <q-icon :name="mdiTurtle" size="xl" />
+          <h4 style="margin-top: 20px">
+            Error :'[
+          </h4>
+          <div>{{ errMsg?.msg }}</div>
+          <div>{{ errMsg?.err }}</div>
+          <div>{{ errMsg?.requestId }}</div>
+        </div>
+      </div>
+
+      <object v-if="pdfDataUrl" type="application/pdf" :data="pdfDataUrl" class="pdf-viewer">
         <div class="ma-8" style="box-sizing: border-box">
           <p class="pb-4">
             FALLBACK TEXT
@@ -53,18 +66,6 @@
           </v-btn> -->
         </div>
       </object>
-      <div v-else class="loading-wrapper">
-        <q-circular-progress v-if="isLoading" indeterminate size="xl" />
-        <div v-else-if="hasError" style="text-align: center">
-          <q-icon :name="mdiTurtle" size="xl" />
-          <h4 style="margin-top: 20px">
-            Error :'[
-          </h4>
-          <div>{{ errMsg?.msg }}</div>
-          <div>{{ errMsg?.err }}</div>
-          <div>{{ errMsg?.requestId }}</div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -111,7 +112,7 @@ const templateEngines = Object.values(EnumRenderTemplateDataTemplateEngine)
 const pdfDataUrl = ref("")
 
 const isLoading = ref(0)
-const hasError = computed(() => isLoading.value === 0 && pdfDataUrl.value === "")
+const hasError = computed(() => errMsg.value !== null)
 const errMsg = ref<RequestError | null>(null)
 
 const requestTimeInMs = ref(0)
@@ -131,7 +132,6 @@ const requestPdf = async () => {
 
   try {
     isLoading.value++
-    pdfDataUrl.value = ""
     errMsg.value = null
 
     const startTime = new Date().getTime()
@@ -162,9 +162,22 @@ const requestPdf = async () => {
   }
 }
 
+const createDebounce = () => {
+  let timeout: number | null = null
+  return (func: () => unknown, delayMs: number | null = null) => {
+    if (timeout !== null) {
+      clearTimeout(timeout)
+    }
+    timeout = setTimeout(() => {
+      func()
+    }, delayMs || 500)
+  }
+}
+
 // initial rendering and watch
 requestPdf()
-watch(renderTemplateData, () => requestPdf())
+const debounce = createDebounce()
+watch(renderTemplateData, () => debounce(() => requestPdf(), 1000))
 </script>
 
 <style lang="scss">
@@ -234,22 +247,27 @@ watch(renderTemplateData, () => requestPdf())
 
   .pdf-container {
     grid-area: pdf;
+    position: relative;
 
-    .loading-wrapper {
+    > * {
+      position: absolute;
       height: 100%;
       width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+
+      &.loading-wrapper {
+        z-index: 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #828282b2;
+      }
+
+      &.pdf-viewer {
+        z-index: 1;
+        margin-bottom: -6px;
+      }
     }
   }
-}
-
-.pdf-viewer {
-  height: 100%;
-  width: 100%;
-
-  margin-bottom: -6px;
 }
 
 .editor {
