@@ -39,6 +39,12 @@
       </q-list>
 
       <q-list>
+        <q-item class="item" :href="swaggerUrl" target="_blank">
+          <q-item-section avatar>
+            <q-icon :name="mdiCodeBraces" />
+          </q-item-section>
+          <q-item-section>Swagger</q-item-section>
+        </q-item>
         <q-item class="item" href="https://github.com/lucas-gaitzsch/pdf-turtle" target="_blank">
           <q-item-section avatar>
             <q-icon :name="mdiGithub" />
@@ -121,7 +127,9 @@ import {
   mdiInformationOutline,
   mdiTortoise,
   mdiGithub,
+  mdiCodeBraces,
 } from "@quasar/extras/mdi-v6"
+import { serverBaseUrl } from "./config/server"
 
 const localStorageIsDarkThemeKey = "isDarkMode"
 
@@ -163,11 +171,13 @@ export default defineComponent({
       playgroundRoute: { name: routeNames.Playground },
       aboutRoute: { name: routeNames.About },
       miniState,
+      swaggerUrl: `${serverBaseUrl}/swagger/index.html`,
       mdiApplicationBracketsOutline,
       mdiWeatherSunny,
       mdiWeatherNight,
       mdiInformationOutline,
       mdiTortoise,
+      mdiCodeBraces,
       mdiGithub,
     }
   },

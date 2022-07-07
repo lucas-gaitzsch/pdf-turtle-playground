@@ -27,8 +27,16 @@
 
         <q-toggle v-model="renderTemplateData.options!.landscape" label="Landscape" />
       </q-card-section>
+
       <q-card-section v-if="requestTimeInMs" class="runtime-container">
         <span>{{ requestTimeInMs }} ms</span>
+
+        <q-btn :icon="mdiCogOutline" round flat>
+          <q-menu class="q-pa-md">
+            <q-input v-model="serverUrl" label="Custom server url" placeholder="https://pdfturtle.gaitzsch.dev" />
+            <q-input v-model="secret" label="Secret" placeholder="3539bf53858d4e1e37616b" />
+          </q-menu>
+        </q-btn>
       </q-card-section>
     </q-card>
 
@@ -36,7 +44,7 @@
       <html-editor v-model="renderTemplateData.htmlTemplate" class="editor" :no-handlebars="true" />
     </div>
     <div class="code-container model">
-      <json-editor v-model="renderTemplateData.model" class="editor" />
+      <json-editor v-model="renderTemplateData.modelStr" class="editor" />
     </div>
 
     <div class="pdf-container">
@@ -55,15 +63,9 @@
 
       <object v-if="pdfDataUrl" type="application/pdf" :data="pdfDataUrl" class="pdf-viewer">
         <div class="ma-8" style="box-sizing: border-box">
-          <p class="pb-4">
-            FALLBACK TEXT
-            <!--TODO:!!-->
-          </p>
+          <p class="pb-4">Your browser do not support embedded pdf visualization.</p>
 
-          <!--TODO:!  <v-btn block color="primary" :href="pdfDataUrl" target="_blank" large>
-            <v-icon left>mdi-open-in-new</v-icon>
-            Open external
-          </v-btn> -->
+          <q-btn :href="pdfDataUrl" target="_blank" size="lg" :icon="mdiOpenInNew">Open external</q-btn>
         </div>
       </object>
     </div>
@@ -86,12 +88,12 @@ import { RequestError } from "@/models/request-error"
 import { AxiosError, CanceledError } from "axios"
 import { model, template } from "@/assets/prefill"
 
-import { mdiTurtle } from "@quasar/extras/mdi-v6"
+import { mdiTurtle, mdiOpenInNew, mdiCogOutline } from "@quasar/extras/mdi-v6"
 
-const renderTemplateData = reactive<RenderTemplateData>({
+const renderTemplateData = reactive<RenderTemplateData & { modelStr: string }>({
   templateEngine: EnumRenderTemplateDataTemplateEngine.golang,
   htmlTemplate: template,
-  model: JSON.stringify(model, null, 2),
+  modelStr: JSON.stringify(model, null, 2),
   options: {
     landscape: false,
     pageFormat: EnumRenderOptionsPageFormat.A4,
@@ -109,6 +111,9 @@ const marginsProxy = computed(() => renderTemplateData.options?.margins ?? {})
 const pageSizes = Object.values(EnumRenderOptionsPageFormat)
 const templateEngines = Object.values(EnumRenderTemplateDataTemplateEngine)
 
+const serverUrl = ref("")
+const secret = ref("")
+
 const pdfDataUrl = ref("")
 
 const isLoading = ref(0)
@@ -123,16 +128,14 @@ const requestPdf = async () => {
   abortController.abort()
   abortController = new AbortController()
 
-  const d: RenderTemplateData = {
-    ...renderTemplateData,
-    model: JSON.parse(renderTemplateData.model || "null"),
-    headerModel: JSON.parse(renderTemplateData.headerModel || "null"),
-    footerModel: JSON.parse(renderTemplateData.footerModel || "null"),
-  }
-
   try {
     isLoading.value++
     errMsg.value = null
+
+    const d: RenderTemplateData = {
+      ...renderTemplateData,
+      model: JSON.parse(renderTemplateData.modelStr || "null"),
+    }
 
     const startTime = new Date().getTime()
 
@@ -141,6 +144,8 @@ const requestPdf = async () => {
       {
         responseType: "blob",
         signal: abortController.signal,
+        baseURL: serverUrl.value || undefined,
+        headers: secret.value === "" ? undefined : { Authorization: `Bearer ${secret.value}` },
       }
     )
 
@@ -156,6 +161,7 @@ const requestPdf = async () => {
         errMsg.value = JSON.parse(responseText) as RequestError
       }
       console.warn("request err", e)
+      errMsg.value = { msg: <string>e, err: " - ", requestId: " - " }
     }
   } finally {
     isLoading.value--
@@ -189,7 +195,7 @@ watch(renderTemplateData, () => debounce(() => requestPdf(), 1000))
   display: grid;
   grid-template-columns: 10fr 8fr;
   // grid-auto-rows: minmax(100px, auto);
-  grid-template-rows: min-content 2fr 1fr;
+  grid-template-rows: min-content 4fr 3fr;
 
   grid-template-areas:
     "options  pdf"
@@ -256,10 +262,12 @@ watch(renderTemplateData, () => debounce(() => requestPdf(), 1000))
 
       &.loading-wrapper {
         z-index: 2;
+        font-size: 1.2rem;
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #828282b2;
+        background-color: #878787b2;
+        backdrop-filter: blur(4px);
       }
 
       &.pdf-viewer {

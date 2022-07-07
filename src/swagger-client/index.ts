@@ -166,19 +166,19 @@ export interface RenderTemplateData {
   footerHtmlTemplate?: string
 
   /** Optional model for footer. If empty or null model was used. */
-  footerModel?: any
+  footerModel?: object
 
   /** Optional template for header. If empty, the header template will be parsed from main template (<PdfHeader></PdfHeader>). */
   headerHtmlTemplate?: string
 
   /** Optional model for header. If empty or null model was used. */
-  headerModel?: any
+  headerModel?: object
 
   /**  */
   htmlTemplate?: string
 
   /**  */
-  model?: any
+  model?: object
 
   /**  */
   options?: RenderOptions
