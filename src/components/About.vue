@@ -1,4 +1,4 @@
-<template>TODO:!</template>
+<template>Coming soon...</template>
 
 <script setup lang="ts">
 import { ref } from "vue"

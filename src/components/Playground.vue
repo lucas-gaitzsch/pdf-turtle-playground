@@ -170,20 +170,21 @@ const requestPdf = async () => {
 
 const createDebounce = () => {
   let timeout: number | null = null
-  return (func: () => unknown, delayMs: number | null = null) => {
+  return (func: () => unknown, delayMs = 500) => {
     if (timeout !== null) {
       clearTimeout(timeout)
     }
     timeout = setTimeout(() => {
       func()
-    }, delayMs || 500)
+    }, delayMs)
   }
 }
 
 // initial rendering and watch
-requestPdf()
 const debounce = createDebounce()
 watch(renderTemplateData, () => debounce(() => requestPdf(), 1000))
+
+requestPdf()
 </script>
 
 <style lang="scss">
@@ -194,7 +195,6 @@ watch(renderTemplateData, () => debounce(() => requestPdf(), 1000))
 
   display: grid;
   grid-template-columns: 10fr 8fr;
-  // grid-auto-rows: minmax(100px, auto);
   grid-template-rows: min-content 4fr 3fr;
 
   grid-template-areas:
@@ -263,11 +263,16 @@ watch(renderTemplateData, () => debounce(() => requestPdf(), 1000))
       &.loading-wrapper {
         z-index: 2;
         font-size: 1.2rem;
+
         display: flex;
         justify-content: center;
         align-items: center;
         background-color: #878787b2;
         backdrop-filter: blur(4px);
+
+        > div {
+          max-width: 80%;
+        }
       }
 
       &.pdf-viewer {
