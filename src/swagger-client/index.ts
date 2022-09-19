@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 import { IRequestOptions, IRequestConfig, getConfigs, axios } from "./serviceOptions"
-export const basePath = "/api"
+export const basePath = ""
 
 export interface IList<T> extends Array<T> {}
 export interface List<T> extends Array<T> {}
@@ -33,6 +33,65 @@ export class PagedResultDto<T = any> implements IPagedResult<T> {
 // customer definition
 // empty
 
+export class RenderBundleIncludingHtmlTemplateAndAssetsService {
+  /**
+   * Render PDF from bundle and model provided in form-data (keys: bundle, model)
+   */
+  static render(
+    params: {
+      /** Bundle Zip-File */
+      bundle: any
+      /** JSON-Model for template (only required for template) */
+      model?: string
+      /** Template engine to use for template (only required for template) */
+      templateEngine?: string
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + "/api/pdf/from/bundle/render"
+
+      const configs: IRequestConfig = getConfigs("post", "multipart/form-data", url, options)
+
+      let data = null
+      data = new FormData()
+      if (params["bundle"]) {
+        if (Object.prototype.toString.call(params["bundle"]) === "[object Array]") {
+          for (const item of params["bundle"]) {
+            data.append("bundle", item as any)
+          }
+        } else {
+          data.append("bundle", params["bundle"] as any)
+        }
+      }
+
+      if (params["model"]) {
+        if (Object.prototype.toString.call(params["model"]) === "[object Array]") {
+          for (const item of params["model"]) {
+            data.append("model", item as any)
+          }
+        } else {
+          data.append("model", params["model"] as any)
+        }
+      }
+
+      if (params["templateEngine"]) {
+        if (Object.prototype.toString.call(params["templateEngine"]) === "[object Array]") {
+          for (const item of params["templateEngine"]) {
+            data.append("templateEngine", item as any)
+          }
+        } else {
+          data.append("templateEngine", params["templateEngine"] as any)
+        }
+      }
+
+      configs.data = data
+
+      axios(configs, resolve, reject)
+    })
+  }
+}
+
 export class RenderHtmlTemplateService {
   /**
    * Render PDF from HTML template
@@ -45,7 +104,7 @@ export class RenderHtmlTemplateService {
     options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
-      let url = basePath + "/pdf/from/html-template/render"
+      let url = basePath + "/api/pdf/from/html-template/render"
 
       const configs: IRequestConfig = getConfigs("post", "application/json", url, options)
 
@@ -56,9 +115,6 @@ export class RenderHtmlTemplateService {
       axios(configs, resolve, reject)
     })
   }
-}
-
-export class TestHtmlTemplateService {
   /**
    * Test HTML template matching model
    */
@@ -70,7 +126,7 @@ export class TestHtmlTemplateService {
     options: IRequestOptions = {}
   ): Promise<TemplateTestResult> {
     return new Promise((resolve, reject) => {
-      let url = basePath + "/pdf/from/html-template/test"
+      let url = basePath + "/api/pdf/from/html-template/test"
 
       const configs: IRequestConfig = getConfigs("post", "application/json", url, options)
 
@@ -95,7 +151,7 @@ export class RenderHtmlService {
     options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
-      let url = basePath + "/pdf/from/html/render"
+      let url = basePath + "/api/pdf/from/html/render"
 
       const configs: IRequestConfig = getConfigs("post", "application/json", url, options)
 
@@ -165,14 +221,8 @@ export interface RenderTemplateData {
   /** Optional template for footer. If empty, the footer template will be parsed from main template (<PdfFooter></PdfFooter>). */
   footerHtmlTemplate?: string
 
-  /** Optional model for footer. If empty or null model was used. */
-  footerModel?: object
-
   /** Optional template for header. If empty, the header template will be parsed from main template (<PdfHeader></PdfHeader>). */
   headerHtmlTemplate?: string
-
-  /** Optional model for header. If empty or null model was used. */
-  headerModel?: object
 
   /**  */
   htmlTemplate?: string

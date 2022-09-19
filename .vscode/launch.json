@@ -9,7 +9,7 @@
             "preLaunchTask": "npm: dev",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost:3000",
+            "url": "http://localhost:5173",
             "skipFiles": ["${workspaceFolder}/node_modules/**/*.js"],
             "webRoot": "${workspaceFolder}"
         }

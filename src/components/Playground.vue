@@ -142,6 +142,7 @@ const requestPdf = async () => {
     const res = await RenderHtmlTemplateService.render(
       { renderTemplateData: d },
       {
+        loading: false,
         responseType: "blob",
         signal: abortController.signal,
         baseURL: serverUrl.value || undefined,
@@ -161,7 +162,7 @@ const requestPdf = async () => {
         errMsg.value = JSON.parse(responseText) as RequestError
       }
       console.warn("request err", e)
-      errMsg.value = { msg: <string>e, err: " - ", requestId: " - " }
+      errMsg.value = { msg: e as string, err: " - ", requestId: " - " }
     }
   } finally {
     isLoading.value--
