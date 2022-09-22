@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import * as monaco from "monaco-editor"
-import { EditorBaseProps, useEditorBase } from "./editor-base"
+import { EditorBaseProps, useEditorBase } from "../composables/editor-base"
 import { v4 as uuid } from "uuid"
 
 const props = defineProps({

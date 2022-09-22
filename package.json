@@ -21,8 +21,11 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.15.3",
+    "@types/jszip": "^3.4.1",
     "@types/uuid": "^8.3.4",
     "axios": "^0.27.2",
+    "file-saver": "^2.0.5",
+    "jszip": "^3.10.1",
     "monaco-editor": "^0.34.0",
     "quasar": "^2.8.3",
     "uuid": "^8.3.2",
@@ -31,6 +34,7 @@
   },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.2.1",
+    "@types/file-saver": "^2.0.5",
     "@types/json-schema": "^7.0.11",
     "@types/node": "^12.20.21",
     "@typescript-eslint/eslint-plugin": "^5.28.0",

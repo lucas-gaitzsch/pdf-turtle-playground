@@ -33,9 +33,9 @@ export class PagedResultDto<T = any> implements IPagedResult<T> {
 // customer definition
 // empty
 
-export class RenderBundleIncludingHtmlTemplateAndAssetsService {
+export class RenderHtmlBundleService {
   /**
-   * Render PDF from bundle and model provided in form-data (keys: bundle, model)
+   * Render PDF from bundle including HTML(-Template) with model and assets provided in form-data (keys: bundle, model)
    */
   static render(
     params: {
@@ -49,7 +49,7 @@ export class RenderBundleIncludingHtmlTemplateAndAssetsService {
     options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
-      let url = basePath + "/api/pdf/from/bundle/render"
+      let url = basePath + "/api/pdf/from/html-bundle/render"
 
       const configs: IRequestConfig = getConfigs("post", "multipart/form-data", url, options)
 

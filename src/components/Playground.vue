@@ -8,7 +8,7 @@
           label="Page size"
           dense
           outlined
-          style="min-width: 120px"
+          class="option-select"
         />
         <q-select
           v-model="renderTemplateData.templateEngine"
@@ -16,22 +16,76 @@
           label="Template engine"
           dense
           outlined
-          style="min-width: 120px"
+          class="option-select"
         />
 
-        <q-btn label="Margins" flat>
+        <q-toggle v-model="renderTemplateData.options.landscape" label="Landscape" dense class="q-px-sm" />
+
+        <q-btn label="Margins" flat no-caps>
           <q-menu>
-            <margins v-model="marginsProxy" />
+            <margins v-model="renderTemplateData.options.margins" />
           </q-menu>
         </q-btn>
 
-        <q-toggle v-model="renderTemplateData.options!.landscape" label="Landscape" />
+        <q-btn label="Assets" flat no-caps>
+          <q-menu class="q-pa-sm">
+            <q-list>
+              <q-item v-for="a of renderTemplateData.assets" :key="a.name">
+                <q-item-section>
+                  <q-item-label>{{ a.name }}</q-item-label>
+                </q-item-section>
+
+                <q-item-section side>
+                  <q-btn
+                    class="gt-xs"
+                    size="12px"
+                    flat
+                    dense
+                    round
+                    :icon="mdiDeleteOutline"
+                    @click="removeAsset(a)"
+                  />
+                </q-item-section>
+              </q-item>
+            </q-list>
+
+            <q-file outlined dense multiple v-model="assetToAddFileInputModel" label="Add file to assets">
+              <template #prepend>
+                <q-icon :name="mdiAttachmentPlus" />
+              </template>
+            </q-file>
+
+            <q-banner rounded dense class="q-mt-sm banner">
+              Assets are located under
+              <i>/assets/*</i>
+            </q-banner>
+          </q-menu>
+        </q-btn>
       </q-card-section>
 
       <q-card-section v-if="requestTimeInMs" class="runtime-container">
         <span>{{ requestTimeInMs }} ms</span>
 
-        <q-btn :icon="mdiCogOutline" round flat>
+        <q-btn
+          round
+          flat
+          dense
+          @click="saveBundle()"
+          :icon="mdiContentSaveOutline"
+          title="Save as bundle"
+        />
+
+        <q-file v-show="false" ref="uploadBundle" v-model="bundleFileInputModel" />
+        <q-btn
+          round
+          flat
+          dense
+          @click="() => ($refs.uploadBundle as any).$el.click()"
+          :icon="mdiFolderOutline"
+          title="Open bundle"
+        />
+
+        <q-btn round flat dense :icon="mdiCogOutline" title="Settings">
           <q-menu class="q-pa-md">
             <q-input v-model="serverUrl" label="Custom server url" placeholder="https://pdfturtle.gaitzsch.dev" />
             <q-input v-model="secret" label="Secret" placeholder="3539bf53858d4e1e37616b" />
@@ -61,11 +115,11 @@
         </div>
       </div>
 
-      <object v-if="pdfDataUrl" type="application/pdf" :data="pdfDataUrl" class="pdf-viewer">
+      <object v-if="pdfResponseDataUrl" type="application/pdf" :data="pdfResponseDataUrl" class="pdf-viewer">
         <div class="ma-8" style="box-sizing: border-box">
           <p class="pb-4">Your browser do not support embedded pdf visualization.</p>
 
-          <q-btn :href="pdfDataUrl" target="_blank" size="lg" :icon="mdiOpenInNew">Open external</q-btn>
+          <q-btn :href="pdfResponseDataUrl" target="_blank" size="lg" :icon="mdiOpenInNew">Open external</q-btn>
         </div>
       </object>
     </div>
@@ -73,122 +127,52 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch, computed } from "vue"
-import {
-  EnumRenderOptionsPageFormat,
-  EnumRenderTemplateDataTemplateEngine,
-  RenderHtmlTemplateService,
-  RenderTemplateData,
-} from "@/swagger-client"
-import HtmlEditor from "@/components/base-editors/HtmlEditor.vue"
-import JsonEditor from "@/components/base-editors/JsonEditor.vue"
+import { EnumRenderOptionsPageFormat, EnumRenderTemplateDataTemplateEngine } from "@/swagger-client"
+import HtmlEditor from "@/components/editors/HtmlEditor.vue"
+import JsonEditor from "@/components/editors/JsonEditor.vue"
 import Margins from "@/components/option-inputs/Margins.vue"
-import { RequestError } from "@/models/request-error"
 
-import { AxiosError, CanceledError } from "axios"
-import { model, template } from "@/assets/prefill"
+import {
+  mdiTurtle,
+  mdiOpenInNew,
+  mdiCogOutline,
+  mdiAttachmentPlus,
+  mdiDeleteOutline,
+  mdiContentSaveOutline,
+  mdiFolderOutline,
+} from "@quasar/extras/mdi-v7"
 
-import { mdiTurtle, mdiOpenInNew, mdiCogOutline } from "@quasar/extras/mdi-v6"
-
-const renderTemplateData = reactive<RenderTemplateData & { modelStr: string }>({
-  templateEngine: EnumRenderTemplateDataTemplateEngine.golang,
-  htmlTemplate: template,
-  modelStr: JSON.stringify(model, null, 2),
-  options: {
-    landscape: false,
-    pageFormat: EnumRenderOptionsPageFormat.A4,
-    margins: {
-      top: 25,
-      right: 25,
-      bottom: 20,
-      left: 25,
-    },
-  },
-})
-
-const marginsProxy = computed(() => renderTemplateData.options?.margins ?? {})
+import { useBundleHandling } from "./composables/bundle-handling"
+import { useAssetHandling } from "./composables/asset-handling"
+import { usePdfRendering } from "./composables/pdf-rendering"
 
 const pageSizes = Object.values(EnumRenderOptionsPageFormat)
 const templateEngines = Object.values(EnumRenderTemplateDataTemplateEngine)
 
-const serverUrl = ref("")
-const secret = ref("")
+const {
+  renderTemplateData,
+  serverUrl,
+  secret,
+  loadingCounter,
+  isLoading,
+  hasError,
+  errMsg,
+  requestTimeInMs,
+  pdfResponseDataUrl,
+  requestPdf,
+} = usePdfRendering()
 
-const pdfDataUrl = ref("")
-
-const isLoading = ref(0)
-const hasError = computed(() => errMsg.value !== null)
-const errMsg = ref<RequestError | null>(null)
-
-const requestTimeInMs = ref(0)
-
-let abortController = new AbortController()
-
-const requestPdf = async () => {
-  abortController.abort()
-  abortController = new AbortController()
-
-  try {
-    isLoading.value++
-    errMsg.value = null
-
-    const d: RenderTemplateData = {
-      ...renderTemplateData,
-      model: JSON.parse(renderTemplateData.modelStr || "null"),
-    }
-
-    const startTime = new Date().getTime()
-
-    const res = await RenderHtmlTemplateService.render(
-      { renderTemplateData: d },
-      {
-        loading: false,
-        responseType: "blob",
-        signal: abortController.signal,
-        baseURL: serverUrl.value || undefined,
-        headers: secret.value === "" ? undefined : { Authorization: `Bearer ${secret.value}` },
-      }
-    )
-
-    requestTimeInMs.value = new Date().getTime() - startTime
-
-    pdfDataUrl.value = URL.createObjectURL(res)
-  } catch (e) {
-    if (e instanceof CanceledError) {
-      console.log("request was canceled")
-    } else {
-      if (e instanceof AxiosError) {
-        const responseText: string = await e.response?.data.text()
-        errMsg.value = JSON.parse(responseText) as RequestError
-      }
-      console.warn("request err", e)
-      errMsg.value = { msg: e as string, err: " - ", requestId: " - " }
-    }
-  } finally {
-    isLoading.value--
-  }
-}
-
-const createDebounce = () => {
-  let timeout: number | null = null
-  return (func: () => unknown, delayMs = 500) => {
-    if (timeout !== null) {
-      clearTimeout(timeout)
-    }
-    timeout = setTimeout(() => {
-      func()
-    }, delayMs)
-  }
-}
-
-// initial rendering and watch
-const debounce = createDebounce()
-watch(renderTemplateData, () => debounce(() => requestPdf(), 1000))
+const { assetToAddFileInputModel, removeAsset } = useAssetHandling(renderTemplateData)
+const { bundleFileInputModel, loadBundle, packBundle, saveBundle } = useBundleHandling(renderTemplateData)
 
 requestPdf()
 </script>
 
 <style lang="scss">
+.banner {
+  background-color: rgba(129, 129, 129, 0.125) !important;
+}
+
 .layout-wrapper {
   min-height: inherit;
   height: 100%;
@@ -230,6 +214,19 @@ requestPdf()
 
     * {
       gap: 4px;
+    }
+
+    .option-select {
+      min-width: 120px;
+    }
+
+    button,
+    .q-toggle__label {
+      opacity: 0.9;
+
+      svg {
+        opacity: 0.85;
+      }
     }
 
     .runtime-container {

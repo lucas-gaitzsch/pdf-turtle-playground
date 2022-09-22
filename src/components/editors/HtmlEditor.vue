@@ -6,7 +6,7 @@
 import { watch } from "vue"
 import * as monaco from "monaco-editor"
 
-import { EditorBaseProps, useEditorBase } from "./editor-base"
+import { EditorBaseProps, useEditorBase } from "../composables/editor-base"
 
 const props = defineProps({
   ...EditorBaseProps,
