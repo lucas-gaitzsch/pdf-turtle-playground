@@ -1,5 +1,7 @@
 <template>
   <div class="layout-wrapper">
+    <!-- ### Options-Container ### -->
+
     <q-card flat bordered class="options-container">
       <q-card-section class="row">
         <q-select
@@ -11,9 +13,9 @@
           class="option-select"
         />
 
+        <q-file v-show="false" ref="uploadBundle" v-model="bundleFileInputModel" />
         <q-btn label="Bundle" :icon="mdiPackageVariant" flat no-caps>
-          <q-menu>
-            <q-file v-show="false" ref="uploadBundle" v-model="bundleFileInputModel" />
+          <q-menu auto-close>
             <q-item clickable v-ripple @click="() => ($refs.uploadBundle as any).$el.click()">
               <q-item-section avatar>
                 <q-icon :name="mdiFolderOutline" />
@@ -58,8 +60,10 @@
         </q-btn>
       </q-card-section>
 
-      <q-card-section v-if="requestTimeInMs" class="runtime-container">
-        <span>{{ requestTimeInMs }} ms</span>
+      <q-card-section class="right-container">
+        <div v-if="requestTimeInMs" class="runtime-container">
+          {{ requestTimeInMs }} ms
+        </div>
 
         <q-btn round flat dense :icon="mdiCogOutline" title="Settings">
           <q-menu class="q-pa-md">
@@ -70,12 +74,38 @@
       </q-card-section>
     </q-card>
 
-    <div class="code-container template">
-      <html-editor v-model="renderTemplateData.htmlTemplate" class="editor" :no-handlebars="true" />
+    <!-- ### Code-Container ### -->
+
+    <div class="code-container">
+      <q-card flat>
+        <q-tabs v-model="editorTab" dense no-caps inline-label align="left">
+          <q-tab :name="editorTabDefinitions.body" label="Body" />
+          <q-tab :name="editorTabDefinitions.header" label="Header" />
+          <q-tab :name="editorTabDefinitions.footer" label="Footer" />
+          <q-tab :name="editorTabDefinitions.model" label="Model" />
+        </q-tabs>
+      </q-card>
+      <q-separator />
+      <q-tab-panels v-model="editorTab" keep-alive>
+        <q-tab-panel :name="editorTabDefinitions.body">
+          <html-editor v-model="renderTemplateData.htmlTemplate" class="editor" />
+        </q-tab-panel>
+
+        <q-tab-panel :name="editorTabDefinitions.header">
+          <html-editor v-model="renderTemplateData.headerHtmlTemplate" class="editor" />
+        </q-tab-panel>
+
+        <q-tab-panel :name="editorTabDefinitions.footer">
+          <html-editor v-model="renderTemplateData.footerHtmlTemplate" class="editor" />
+        </q-tab-panel>
+
+        <q-tab-panel :name="editorTabDefinitions.model">
+          <json-editor v-model="renderTemplateData.modelStr" class="editor" />
+        </q-tab-panel>
+      </q-tab-panels>
     </div>
-    <div class="code-container model">
-      <json-editor v-model="renderTemplateData.modelStr" class="editor" />
-    </div>
+
+    <!-- ### PDF-Container ### -->
 
     <div class="pdf-container">
       <div v-if="isLoading || hasError" class="loading-wrapper">
@@ -123,9 +153,18 @@ import {
 import { useBundleHandling } from "./composables/bundle-handling"
 import { usePdfRendering } from "./composables/pdf-rendering"
 import Assets from "./option-inputs/Assets.vue"
+import { readonly, ref } from "vue"
 
 const pageSizes = Object.values(EnumRenderOptionsPageFormat)
 const templateEngines = Object.values(EnumRenderTemplateDataTemplateEngine)
+
+const editorTabDefinitions = readonly({
+  body: "body",
+  header: "header",
+  footer: "footer",
+  model: "model",
+})
+const editorTab = ref(editorTabDefinitions.body)
 
 const {
   renderTemplateData,
@@ -155,30 +194,36 @@ requestPdf()
   background-color: #a1a1a147;
 
   display: grid;
+  gap: 4px;
   grid-template-columns: 10fr 8fr;
-  grid-template-rows: min-content 4fr 3fr;
+  grid-template-rows: min-content 1fr;
 
   grid-template-areas:
     "options  pdf"
-    "template pdf"
-    "model    pdf";
+    "code pdf";
 
   @media only screen and (max-width: 1200px) {
     grid-template-columns: 1fr 1fr;
   }
 
-  // @media only screen and (max-width: 1000px) {
-  //   // height: auto;
-  //   grid-template-columns: 1fr;
-  //   grid-template-rows: min-content 400px 300px 500px;
-  //   grid-template-areas:
-  //     "options"
-  //     "template"
-  //     "model"
-  //     "pdf";
-  // }
+  @media only screen and (max-width: 1000px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content 400px 300px 500px;
+    grid-template-areas:
+      "options"
+      "code"
+      "pdf";
 
-  gap: 4px;
+    padding-right: 2px;
+
+    .q-btn .on-left {
+      margin-right: 4px;
+    }
+
+    .runtime-container {
+      display: none;
+    }
+  }
 
   .options-container {
     grid-area: options;
@@ -202,23 +247,35 @@ requestPdf()
       }
     }
 
-    .runtime-container {
+    .right-container {
       display: flex;
       margin-left: auto;
       align-items: center;
 
-      span {
+      .runtime-container {
         text-align: right;
       }
     }
   }
 
   .code-container {
-    &.template {
-      grid-area: template;
+    margin-left: 2px;
+
+    grid-area: code;
+
+    display: flex;
+    flex-direction: column;
+
+    > .q-card {
+      border-radius: $generic-border-radius $generic-border-radius 0 0;
     }
-    &.model {
-      grid-area: model;
+
+    > .q-tab-panels {
+      flex: 1;
+
+      .q-tab-panel {
+        padding: 0;
+      }
     }
   }
 

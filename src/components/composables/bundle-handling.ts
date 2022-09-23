@@ -3,6 +3,7 @@ import { ref, watch } from "vue"
 import JsZip from "jszip"
 import FileSaver from "file-saver"
 import { getBaseOptions, getBaseRenderData, RenderTemplateDataViewModel } from "@/models/render-data-base"
+import { Asset, BundleAssetsFolder } from "@/models/asset"
 
 type IncludedFiles = { index?: boolean; header?: boolean; footer?: boolean; options?: boolean; assets?: boolean }
 
@@ -53,7 +54,18 @@ export function useBundleHandling(reactiveRenderTemplateDataViewModel: RenderTem
     const footerStr = await (zip.files["footer.html"]?.async("string") ?? emptyStringPromise)
     const optionsStr = await (zip.files["options.json"]?.async("string") ?? emptyStringPromise)
 
-    //TODO: entfernen?
+    const assetFolderPath = BundleAssetsFolder + "/"
+    const assets: Asset[] = []
+    for (const fKey in zip.files) {
+      if (fKey.startsWith(assetFolderPath) && fKey !== assetFolderPath) {
+        assets.push({
+          name: fKey.substring(assetFolderPath.length),
+          blob: await zip.files[fKey].async("blob"),
+        })
+      }
+    }
+
+    //TODO: remove?
     // if (headerStr || footerStr) {
     //   const docType = "<!DOCTYPE html>"
     //   const headerFooter = `${docType}\n\n<PdfHeader>\n${headerStr}\n</PdfHeader>\n\n<PdfFooter>\n${footerStr}\n</PdfFooter>`
@@ -76,6 +88,10 @@ export function useBundleHandling(reactiveRenderTemplateDataViewModel: RenderTem
     }
     if (optionsStr) {
       target.options = { ...getBaseOptions(), ...JSON.parse(optionsStr) }
+    }
+
+    if (assets.length > 0) {
+      target.assets = assets
     }
 
     return target

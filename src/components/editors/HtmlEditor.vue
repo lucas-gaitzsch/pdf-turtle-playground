@@ -10,16 +10,16 @@ import { EditorBaseProps, useEditorBase } from "../composables/editor-base"
 
 const props = defineProps({
   ...EditorBaseProps,
-  noHandlebars: { type: Boolean, default: false },
+  handlebars: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(["update:modelValue"])
 
-const createModel = (value: string) => monaco.editor.createModel(value, props.noHandlebars ? "html" : "handlebars")
+const createModel = (value: string) => monaco.editor.createModel(value, props.handlebars ? "handlebars" : "html")
 const { editorDomRef, recreateModel } = useEditorBase(props, emit, createModel)
 
 watch(
-  () => props.noHandlebars,
+  () => props.handlebars,
   () => recreateModel()
 )
 </script>
