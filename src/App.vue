@@ -112,6 +112,14 @@
     }
   }
 }
+
+.q-menu {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(4px);
+}
+.body--dark .q-menu {
+  background-color: rgba(29, 29, 29, 0.7) !important;
+}
 </style>
 
 <script lang="ts">

@@ -3,14 +3,6 @@
     <q-card flat bordered class="options-container">
       <q-card-section class="row">
         <q-select
-          v-model="renderTemplateData.options!.pageFormat"
-          :options="pageSizes"
-          label="Page size"
-          dense
-          outlined
-          class="option-select"
-        />
-        <q-select
           v-model="renderTemplateData.templateEngine"
           :options="templateEngines"
           label="Template engine"
@@ -19,71 +11,55 @@
           class="option-select"
         />
 
-        <q-toggle v-model="renderTemplateData.options.landscape" label="Landscape" dense class="q-px-sm" />
+        <q-btn label="Bundle" :icon="mdiPackageVariant" flat no-caps>
+          <q-menu>
+            <q-file v-show="false" ref="uploadBundle" v-model="bundleFileInputModel" />
+            <q-item clickable v-ripple @click="() => ($refs.uploadBundle as any).$el.click()">
+              <q-item-section avatar>
+                <q-icon :name="mdiFolderOutline" />
+              </q-item-section>
+              <q-item-section>Open bundle</q-item-section>
+            </q-item>
 
-        <q-btn label="Margins" flat no-caps>
+            <q-item clickable v-ripple @click="saveBundle()">
+              <q-item-section avatar>
+                <q-icon :name="mdiContentSaveOutline" />
+              </q-item-section>
+              <q-item-section>Save as bundle</q-item-section>
+            </q-item>
+          </q-menu>
+        </q-btn>
+
+        <q-btn label="Layout" :icon="mdiFileDocumentOutline" flat no-caps>
+          <q-menu class="q-pa-sm">
+            <q-select
+              v-model="renderTemplateData.options.pageFormat"
+              :options="pageSizes"
+              label="Page size"
+              dense
+              outlined
+              class="option-select"
+            />
+
+            <q-toggle v-model="renderTemplateData.options.landscape" label="Landscape" dense class="q-px-sm q-py-md" />
+          </q-menu>
+        </q-btn>
+
+        <q-btn label="Margins" :icon="mdiBorderNoneVariant" flat no-caps>
           <q-menu>
             <margins v-model="renderTemplateData.options.margins" />
           </q-menu>
         </q-btn>
 
-        <q-btn label="Assets" flat no-caps>
+        <q-btn label="Assets" :icon="mdiFileImagePlusOutline" flat no-caps>
           <q-menu class="q-pa-sm">
-            <q-list>
-              <q-item v-for="a of renderTemplateData.assets" :key="a.name">
-                <q-item-section>
-                  <q-item-label>{{ a.name }}</q-item-label>
-                </q-item-section>
-
-                <q-item-section side>
-                  <q-btn
-                    class="gt-xs"
-                    size="12px"
-                    flat
-                    dense
-                    round
-                    :icon="mdiDeleteOutline"
-                    @click="removeAsset(a)"
-                  />
-                </q-item-section>
-              </q-item>
-            </q-list>
-
-            <q-file outlined dense multiple v-model="assetToAddFileInputModel" label="Add file to assets">
-              <template #prepend>
-                <q-icon :name="mdiAttachmentPlus" />
-              </template>
-            </q-file>
-
-            <q-banner rounded dense class="q-mt-sm banner">
-              Assets are located under
-              <i>/assets/*</i>
-            </q-banner>
+            <assets v-model="renderTemplateData.assets" />
           </q-menu>
         </q-btn>
       </q-card-section>
 
       <q-card-section v-if="requestTimeInMs" class="runtime-container">
         <span>{{ requestTimeInMs }} ms</span>
-
-        <q-btn
-          round
-          flat
-          dense
-          @click="saveBundle()"
-          :icon="mdiContentSaveOutline"
-          title="Save as bundle"
-        />
-
-        <q-file v-show="false" ref="uploadBundle" v-model="bundleFileInputModel" />
-        <q-btn
-          round
-          flat
-          dense
-          @click="() => ($refs.uploadBundle as any).$el.click()"
-          :icon="mdiFolderOutline"
-          title="Open bundle"
-        />
 
         <q-btn round flat dense :icon="mdiCogOutline" title="Settings">
           <q-menu class="q-pa-md">
@@ -136,15 +112,17 @@ import {
   mdiTurtle,
   mdiOpenInNew,
   mdiCogOutline,
-  mdiAttachmentPlus,
-  mdiDeleteOutline,
   mdiContentSaveOutline,
   mdiFolderOutline,
+  mdiPackageVariant,
+  mdiFileDocumentOutline,
+  mdiFileImagePlusOutline,
+  mdiBorderNoneVariant,
 } from "@quasar/extras/mdi-v7"
 
 import { useBundleHandling } from "./composables/bundle-handling"
-import { useAssetHandling } from "./composables/asset-handling"
 import { usePdfRendering } from "./composables/pdf-rendering"
+import Assets from "./option-inputs/Assets.vue"
 
 const pageSizes = Object.values(EnumRenderOptionsPageFormat)
 const templateEngines = Object.values(EnumRenderTemplateDataTemplateEngine)
@@ -153,7 +131,6 @@ const {
   renderTemplateData,
   serverUrl,
   secret,
-  loadingCounter,
   isLoading,
   hasError,
   errMsg,
@@ -162,8 +139,7 @@ const {
   requestPdf,
 } = usePdfRendering()
 
-const { assetToAddFileInputModel, removeAsset } = useAssetHandling(renderTemplateData)
-const { bundleFileInputModel, loadBundle, packBundle, saveBundle } = useBundleHandling(renderTemplateData)
+const { bundleFileInputModel, saveBundle } = useBundleHandling(renderTemplateData)
 
 requestPdf()
 </script>
@@ -217,15 +193,12 @@ requestPdf()
     }
 
     .option-select {
-      min-width: 120px;
+      min-width: 140px;
     }
 
-    button,
-    .q-toggle__label {
-      opacity: 0.9;
-
+    button {
       svg {
-        opacity: 0.85;
+        opacity: 0.7;
       }
     }
 

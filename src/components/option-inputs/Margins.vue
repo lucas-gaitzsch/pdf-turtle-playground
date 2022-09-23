@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div><q-input v-model.number="marginProxy.top" label="top" /></div>
-    <div>
+    <div style="gap: 42px">
       <q-input v-model.number="marginProxy.left" label="left" />
       <q-input v-model.number="marginProxy.right" label="right" />
     </div>
