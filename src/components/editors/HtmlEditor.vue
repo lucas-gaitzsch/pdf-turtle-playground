@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { watch } from "vue"
-import * as monaco from "monaco-editor"
+import { editor } from "monaco-editor"
 
 import { EditorBaseProps, useEditorBase } from "../composables/editor-base"
 
@@ -15,7 +15,7 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"])
 
-const createModel = (value: string) => monaco.editor.createModel(value, props.handlebars ? "handlebars" : "html")
+const createModel = (value: string) => editor.createModel(value, props.handlebars ? "handlebars" : "html")
 const { editorDomRef, recreateModel } = useEditorBase(props, emit, createModel)
 
 watch(

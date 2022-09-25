@@ -16,14 +16,14 @@
         <q-file v-show="false" ref="uploadBundle" v-model="bundleFileInputModel" />
         <q-btn label="Bundle" :icon="mdiPackageVariant" flat no-caps>
           <q-menu auto-close>
-            <q-item clickable v-ripple @click="() => ($refs.uploadBundle as any).$el.click()">
+            <q-item clickable @click="() => ($refs.uploadBundle as any).$el.click()">
               <q-item-section avatar>
                 <q-icon :name="mdiFolderOutline" />
               </q-item-section>
               <q-item-section>Open bundle</q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple @click="saveBundle()">
+            <q-item clickable @click="saveBundle()">
               <q-item-section avatar>
                 <q-icon :name="mdiContentSaveOutline" />
               </q-item-section>
@@ -142,13 +142,13 @@ import {
   mdiTurtle,
   mdiOpenInNew,
   mdiCogOutline,
-  mdiContentSaveOutline,
-  mdiFolderOutline,
-  mdiPackageVariant,
   mdiFileDocumentOutline,
   mdiFileImagePlusOutline,
   mdiBorderNoneVariant,
-} from "@quasar/extras/mdi-v7"
+  mdiPackageVariant,
+  mdiFolderOutline,
+  mdiContentSaveOutline,
+} from "@quasar/extras/mdi-v6"
 
 import { useBundleHandling } from "./composables/bundle-handling"
 import { usePdfRendering } from "./composables/pdf-rendering"

@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiAttachmentPlus, mdiDeleteOutline } from "@quasar/extras/mdi-v7"
+import { mdiAttachmentPlus, mdiDeleteOutline } from "@quasar/extras/mdi-v6"
 import { Asset } from "@/models/asset"
 import { ref, watch } from "vue"
 

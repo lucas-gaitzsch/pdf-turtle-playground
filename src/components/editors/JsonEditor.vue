@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import * as monaco from "monaco-editor"
+import { editor, Uri, languages } from "monaco-editor"
 import { EditorBaseProps, useEditorBase } from "../composables/editor-base"
 import { v4 as uuid } from "uuid"
 
@@ -17,11 +17,11 @@ const emit = defineEmits(["update:modelValue"])
 const schemaId = uuid()
 
 const createModel = (value: string) => {
-  const modelUri = monaco.Uri.parse("scheme:json/" + schemaId)
-  const model = monaco.editor.createModel(value, "json", modelUri)
+  const modelUri = Uri.parse("scheme:json/" + schemaId)
+  const model = editor.createModel(value, "json", modelUri)
 
   // configure the JSON language support with schemas and schema associations
-  monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+  languages.json.jsonDefaults.setDiagnosticsOptions({
     validate: true,
     schemas: props.schemas.map((schema) => ({
       uri: "scheme:json/" + schemaId,
