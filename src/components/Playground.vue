@@ -29,6 +29,28 @@
               </q-item-section>
               <q-item-section>Save as bundle</q-item-section>
             </q-item>
+
+            <q-separator />
+
+            <q-item clickable @click="loadEmptyData()">
+              <q-item-section avatar>
+                <q-icon :name="mdiBroom" />
+              </q-item-section>
+              <q-item-section>Clean bundle data</q-item-section>
+            </q-item>
+
+            <q-item clickable @click="loadSampleData()">
+              <q-item-section avatar>
+                <q-icon :name="mdiImageAutoAdjust" />
+              </q-item-section>
+              <q-item-section>Load sample data</q-item-section>
+            </q-item>
+          </q-menu>
+        </q-btn>
+
+        <q-btn label="Assets" :icon="mdiFileImagePlusOutline" flat no-caps>
+          <q-menu class="q-pa-sm">
+            <assets v-model="renderTemplateData.assets" />
           </q-menu>
         </q-btn>
 
@@ -50,12 +72,6 @@
         <q-btn label="Margins" :icon="mdiBorderNoneVariant" flat no-caps>
           <q-menu>
             <margins v-model="renderTemplateData.options.margins" />
-          </q-menu>
-        </q-btn>
-
-        <q-btn label="Assets" :icon="mdiFileImagePlusOutline" flat no-caps>
-          <q-menu class="q-pa-sm">
-            <assets v-model="renderTemplateData.assets" />
           </q-menu>
         </q-btn>
       </q-card-section>
@@ -148,12 +164,15 @@ import {
   mdiPackageVariant,
   mdiFolderOutline,
   mdiContentSaveOutline,
+  mdiImageAutoAdjust,
+  mdiBroom,
 } from "@quasar/extras/mdi-v6"
 
 import { useBundleHandling } from "./composables/bundle-handling"
 import { usePdfRendering } from "./composables/pdf-rendering"
 import Assets from "./option-inputs/Assets.vue"
 import { readonly, ref } from "vue"
+import { getBaseRenderData } from "@/models/render-data-base"
 
 const pageSizes = Object.values(EnumRenderOptionsPageFormat)
 const templateEngines = Object.values(EnumRenderTemplateDataTemplateEngine)
@@ -179,6 +198,14 @@ const {
 } = usePdfRendering()
 
 const { bundleFileInputModel, saveBundle } = useBundleHandling(renderTemplateData)
+
+const loadEmptyData = () => {
+  Object.assign(renderTemplateData, getBaseRenderData(true))
+}
+
+const loadSampleData = () => {
+  Object.assign(renderTemplateData, getBaseRenderData())
+}
 
 requestPdf()
 </script>

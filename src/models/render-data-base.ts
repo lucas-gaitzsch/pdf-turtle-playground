@@ -29,11 +29,11 @@ export const getBaseOptions = (): RenderOptionsViewModel => ({
   },
 })
 
-export const getBaseRenderData = (): RenderTemplateDataViewModel => ({
+export const getBaseRenderData = (empty = false): RenderTemplateDataViewModel => ({
   templateEngine: EnumRenderTemplateDataTemplateEngine.golang,
-  htmlTemplate: templateBody,
-  headerHtmlTemplate: templateHeader,
-  modelStr: JSON.stringify(model, null, 2),
+  htmlTemplate: empty ? "" : templateBody,
+  headerHtmlTemplate: empty ? "" : templateHeader,
+  modelStr: empty ? "" : JSON.stringify(model, null, 2),
   options: getBaseOptions(),
   assets: [],
 })
