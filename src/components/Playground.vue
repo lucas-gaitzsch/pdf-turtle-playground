@@ -78,7 +78,7 @@
 
       <q-card-section class="right-container">
         <div v-if="requestTimeInMs" class="runtime-container">
-          {{ requestTimeInMs }} ms
+          {{ (requestTimeInMs / 1000).toFixed(1) }}s
         </div>
 
         <q-btn round flat dense :icon="mdiCogOutline" title="Settings">
@@ -229,6 +229,12 @@ requestPdf()
     "options  pdf"
     "code pdf";
 
+  @media only screen and (max-width: 1400px) {
+    .q-btn .on-left {
+      margin-right: 4px;
+    }
+  }
+
   @media only screen and (max-width: 1200px) {
     grid-template-columns: 1fr 1fr;
   }
@@ -242,10 +248,6 @@ requestPdf()
       "pdf";
 
     padding-right: 2px;
-
-    .q-btn .on-left {
-      margin-right: 4px;
-    }
 
     .runtime-container {
       display: none;
