@@ -146,14 +146,6 @@ export const templateBody = `
 </body>
 
 </html>
-
-<!--
-<PdfFooter>
-	<div class="default-footer">
-    <div><span class="pageNumber"></span> of <span class="totalPages"></span> pages</div>
-	</div>
-</PdfFooter>
--->
 `.trimStart()
 
 export const templateHeader = `
