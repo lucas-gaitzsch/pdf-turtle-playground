@@ -2,7 +2,7 @@
   <q-list>
     <q-item v-for="a of props.modelValue" :key="a.name">
       <q-item-section>
-        <q-item-label>{{ a.name }}</q-item-label>
+        <q-item-label>assets/{{ a.name }}</q-item-label>
       </q-item-section>
 
       <q-item-section side>
