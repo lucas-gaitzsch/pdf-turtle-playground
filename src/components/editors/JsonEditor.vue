@@ -35,5 +35,3 @@ const createModel = (value: string) => {
 
 const { editorDomRef } = useEditorBase(props, emit, createModel)
 </script>
-
-<style lang="scss"></style>

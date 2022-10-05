@@ -9,20 +9,6 @@ import { packBundle } from "./bundle-handling"
 export function usePdfRendering() {
   const renderTemplateData = reactive<RenderTemplateDataViewModel>(getBaseRenderData())
 
-  // const hasHeaderOrFooterInModel = computed<boolean>({
-  //   get: () => !!renderTemplateData.headerHtmlTemplate || !!renderTemplateData.footerHtmlTemplate,
-  //   set: (hasHeader) => {
-  //     if (!hasHeader) {
-  //       renderTemplateData.headerHtmlTemplate = undefined
-  //       renderTemplateData.footerHtmlTemplate = undefined
-  //     } else {
-  //       //TODO:!! default values
-  //       renderTemplateData.headerHtmlTemplate = "TODO"
-  //       renderTemplateData.footerHtmlTemplate = "TODO"
-  //     }
-  //   },
-  // })
-
   const serverUrl = ref("")
   const secret = ref("")
 

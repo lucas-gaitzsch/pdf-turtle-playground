@@ -123,8 +123,7 @@
 </style>
 
 <script lang="ts">
-import { computed, provide, watch } from "vue"
-import { defineComponent, ref, Ref } from "vue"
+import { defineComponent, computed, provide, watch, ref } from "vue"
 import { routeNames } from "./router"
 import { useQuasar } from "quasar"
 
@@ -157,7 +156,7 @@ export default defineComponent({
         return dark.toLowerCase() === "true"
       }
     }
-    const userSelectedDark: Ref<null | boolean> = ref(getStoredUserSelectedDark())
+    const userSelectedDark = ref(getStoredUserSelectedDark())
     const themeIsDark = computed(() => (userSelectedDark.value === null ? browserDarkMode : userSelectedDark.value))
 
     watch(themeIsDark, (isDark) => $q.dark.set(isDark))

@@ -153,6 +153,7 @@ import { EnumRenderOptionsPageFormat, EnumRenderTemplateDataTemplateEngine } fro
 import HtmlEditor from "@/components/editors/HtmlEditor.vue"
 import JsonEditor from "@/components/editors/JsonEditor.vue"
 import Margins from "@/components/option-inputs/Margins.vue"
+import Assets from "./option-inputs/Assets.vue"
 
 import {
   mdiTurtle,
@@ -170,7 +171,6 @@ import {
 
 import { useBundleHandling } from "./composables/bundle-handling"
 import { usePdfRendering } from "./composables/pdf-rendering"
-import Assets from "./option-inputs/Assets.vue"
 import { readonly, ref } from "vue"
 import { getBaseRenderData } from "@/models/render-data-base"
 

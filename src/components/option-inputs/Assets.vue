@@ -27,7 +27,7 @@
 
   <q-banner rounded dense class="q-mt-sm banner">
     Assets are located under
-    <i>assets/*</i>
+    <em>assets/*</em>
   </q-banner>
 </template>
 

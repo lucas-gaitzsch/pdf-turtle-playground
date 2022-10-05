@@ -17,10 +17,6 @@ const props = defineProps<{
   modelValue: RenderOptionsMargins
 }>()
 
-// const emit = defineEmits<{
-//   (event: 'update:modelValue', margins: RenderOptionsMargins): void
-// }>()
-
 const marginProxy = ref(props.modelValue)
 </script>
 

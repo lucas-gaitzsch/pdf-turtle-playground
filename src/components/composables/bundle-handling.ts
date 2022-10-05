@@ -47,7 +47,7 @@ export function useBundleHandling(reactiveRenderTemplateDataViewModel: RenderTem
   ): Promise<RenderTemplateDataViewModel> => {
     const zip = await JsZip.loadAsync(bundleBufferSrc)
 
-    const emptyStringPromise = new Promise((resolve) => resolve(""))
+    const emptyStringPromise = Promise.resolve("")
 
     const indexStr = await (zip.files["index.html"]?.async("string") ?? emptyStringPromise)
     const headerStr = await (zip.files["header.html"]?.async("string") ?? emptyStringPromise)
@@ -64,18 +64,6 @@ export function useBundleHandling(reactiveRenderTemplateDataViewModel: RenderTem
         })
       }
     }
-
-    //TODO: remove?
-    // if (headerStr || footerStr) {
-    //   const docType = "<!DOCTYPE html>"
-    //   const headerFooter = `${docType}\n\n<PdfHeader>\n${headerStr}\n</PdfHeader>\n\n<PdfFooter>\n${footerStr}\n</PdfFooter>`
-
-    //   if (indexStr.substring(0, 100).includes(docType)) {
-    //     indexStr = indexStr.replace(docType, headerFooter)
-    //   } else {
-    //     indexStr = headerFooter + indexStr
-    //   }
-    // }
 
     if (indexStr) {
       target.htmlTemplate = indexStr
