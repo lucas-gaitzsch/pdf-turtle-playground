@@ -5,7 +5,14 @@ import FileSaver from "file-saver"
 import { getBaseOptions, getBaseRenderData, RenderTemplateDataViewModel } from "@/models/render-data-base"
 import { Asset, BundleAssetsFolder } from "@/models/asset"
 
-type IncludedFiles = { index?: boolean; header?: boolean; footer?: boolean; options?: boolean; assets?: boolean }
+type IncludedFiles = {
+  index?: boolean
+  header?: boolean
+  footer?: boolean
+  options?: boolean
+  assets?: boolean
+  exampleModel?: boolean
+}
 
 const includedFilesAll: IncludedFiles = {
   index: true,
@@ -13,6 +20,7 @@ const includedFilesAll: IncludedFiles = {
   footer: true,
   options: true,
   assets: true,
+  exampleModel: true,
 }
 
 export function packBundle(data: RenderTemplateDataViewModel, includedFiles = includedFilesAll): Promise<Blob> {
@@ -29,6 +37,9 @@ export function packBundle(data: RenderTemplateDataViewModel, includedFiles = in
   }
   if (includedFiles.options) {
     zip.file("options.json", JSON.stringify(data.options))
+  }
+  if (includedFiles.exampleModel) {
+    zip.file("example-model.json", JSON.stringify(JSON.parse(data.modelStr)))
   }
 
   if (includedFiles.assets) {
@@ -53,6 +64,7 @@ export function useBundleHandling(reactiveRenderTemplateDataViewModel: RenderTem
     const headerStr = await (zip.files["header.html"]?.async("string") ?? emptyStringPromise)
     const footerStr = await (zip.files["footer.html"]?.async("string") ?? emptyStringPromise)
     const optionsStr = await (zip.files["options.json"]?.async("string") ?? emptyStringPromise)
+    const exampleModelStr = await (zip.files["example-model.json"]?.async("string") ?? emptyStringPromise)
 
     const assetFolderPath = BundleAssetsFolder + "/"
     const assets: Asset[] = []
@@ -76,6 +88,11 @@ export function useBundleHandling(reactiveRenderTemplateDataViewModel: RenderTem
     }
     if (optionsStr) {
       target.options = { ...getBaseOptions(), ...JSON.parse(optionsStr) }
+    }
+    if (exampleModelStr) {
+      const model = JSON.parse(exampleModelStr)
+      target.model = model
+      target.modelStr = JSON.stringify(model, null, 2)
     }
 
     if (assets.length > 0) {
