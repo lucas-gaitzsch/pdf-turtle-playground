@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-wrapper">
+  <div class="layout-wrapper" @keydown.ctrl.s.prevent.stop="saveBundle()">
     <!-- ### Options-Container ### -->
 
     <q-card flat bordered class="options-container">
