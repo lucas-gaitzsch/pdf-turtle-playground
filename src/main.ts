@@ -15,7 +15,7 @@ import axios from "axios"
 
 serviceOptions.axios = axios.create({
   baseURL: serverBaseUrl,
-  timeout: 10000,
+  timeout: 30000,
 })
 
 createApp(App)
