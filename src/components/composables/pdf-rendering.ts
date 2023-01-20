@@ -9,8 +9,16 @@ import { packBundle } from "./bundle-handling"
 export function usePdfRendering() {
   const renderTemplateData = reactive<RenderTemplateDataViewModel>(getBaseRenderData())
 
-  const serverUrl = ref("")
-  const secret = ref("")
+  const settings = reactive({
+    serverUrl: "",
+    secret: "",
+  })
+
+  const settingsLocalStorageKey = "settings"
+
+  // save and load settings from local storage
+  watch(settings, () => localStorage.setItem(settingsLocalStorageKey, JSON.stringify(settings)))
+  Object.assign(settings, JSON.parse(localStorage.getItem(settingsLocalStorageKey) ?? "{}"))
 
   const loadingCounter = ref(0)
   const isLoading = computed(() => loadingCounter.value > 0)
@@ -45,8 +53,8 @@ export function usePdfRendering() {
           loading: false,
           responseType: "blob",
           signal: abortController.signal,
-          baseURL: serverUrl.value || undefined,
-          headers: secret.value === "" ? undefined : { Authorization: `Bearer ${secret.value}` },
+          baseURL: settings.serverUrl || undefined,
+          headers: !settings.secret ? undefined : { Authorization: `Bearer ${settings.secret}` },
         }
       )
 
@@ -77,13 +85,11 @@ export function usePdfRendering() {
   // initial rendering and watch
   const debounce = createDebounce()
   watch(renderTemplateData, () => debounce(() => requestPdf(), 1000))
-  watch(secret, () => debounce(() => requestPdf(), 1000))
-  watch(serverUrl, () => debounce(() => requestPdf(), 1000))
+  watch(settings, () => debounce(() => requestPdf(), 1000))
 
   return {
     renderTemplateData,
-    serverUrl,
-    secret,
+    settings,
     loadingCounter,
     isLoading,
     hasError,

@@ -180,6 +180,16 @@ export const templateHeader = `
 </html>
 `.trimStart()
 
+export const templateFooter = `
+<!DOCTYPE html>
+
+<html>
+<body>
+  <div class=\"default-footer\"><div><span class=\"pageNumber\"></span> of <span class=\"totalPages\"></span></div></div>
+</body>
+</html>
+`.trimStart()
+
 export const model = {
   title: "PdfTurtle _🐢_ TestReport",
   heading: "Sales Overview",

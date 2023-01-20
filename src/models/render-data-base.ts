@@ -1,4 +1,4 @@
-import { model, templateBody, templateHeader } from "@/assets/prefill"
+import { model, templateBody, templateFooter, templateHeader } from "@/assets/prefill"
 import {
   EnumRenderOptionsPageFormat,
   EnumRenderTemplateDataTemplateEngine,
@@ -33,6 +33,7 @@ export const getBaseRenderData = (empty = false): RenderTemplateDataViewModel =>
   templateEngine: EnumRenderTemplateDataTemplateEngine.golang,
   htmlTemplate: empty ? "" : templateBody,
   headerHtmlTemplate: empty ? "" : templateHeader,
+  footerHtmlTemplate: empty ? "" : templateFooter,
   modelStr: empty ? "" : JSON.stringify(model, null, 2),
   options: getBaseOptions(),
   assets: [],

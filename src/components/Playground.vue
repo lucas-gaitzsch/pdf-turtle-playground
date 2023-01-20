@@ -93,8 +93,12 @@
 
         <q-btn round flat dense :icon="mdiCogOutline" title="Settings">
           <q-menu class="q-pa-md">
-            <q-input v-model="serverUrl" label="Custom server url" placeholder="https://pdfturtle.gaitzsch.dev" />
-            <q-input v-model="secret" label="Secret" placeholder="3539bf53858d4e1e37616b" />
+            <q-input
+              v-model="settings.serverUrl"
+              label="Custom server url"
+              placeholder="https://pdfturtle.gaitzsch.dev"
+            />
+            <q-input v-model="settings.secret" label="Secret" placeholder="3539bf53858d4e1e37616b" />
           </q-menu>
         </q-btn>
       </q-card-section>
@@ -196,17 +200,8 @@ const editorTabDefinitions = readonly({
 })
 const editorTab = ref(editorTabDefinitions.body)
 
-const {
-  renderTemplateData,
-  serverUrl,
-  secret,
-  isLoading,
-  hasError,
-  errMsg,
-  requestTimeInMs,
-  pdfResponseDataUrl,
-  requestPdf,
-} = usePdfRendering()
+const { renderTemplateData, settings, isLoading, hasError, errMsg, requestTimeInMs, pdfResponseDataUrl, requestPdf } =
+  usePdfRendering()
 
 const { bundleFileInputModel, saveBundle } = useBundleHandling(renderTemplateData)
 
