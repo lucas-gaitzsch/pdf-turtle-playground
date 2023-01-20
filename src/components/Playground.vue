@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-wrapper" @keydown.ctrl.s.prevent.stop="saveBundle()">
+  <div class="layout-wrapper" @keydown.ctrl.s.prevent.stop="saveBundle()" @keydown.ctrl.o.prevent.stop="loadBundle()">
     <!-- ### Options-Container ### -->
 
     <q-card flat bordered class="options-container">
@@ -16,18 +16,28 @@
         <q-file v-show="false" ref="uploadBundle" v-model="bundleFileInputModel" />
         <q-btn label="Bundle" :icon="mdiPackageVariant" flat no-caps>
           <q-menu auto-close>
-            <q-item clickable @click="() => ($refs.uploadBundle as any).$el.click()">
+            <q-item clickable @click="loadBundle()">
               <q-item-section avatar>
                 <q-icon :name="mdiFolderOutline" />
               </q-item-section>
-              <q-item-section>Open bundle</q-item-section>
+              <q-item-section>
+                <q-item-label>Open bundle</q-item-label>
+                <q-item-label caption>
+                  Ctrl+O
+                </q-item-label>
+              </q-item-section>
             </q-item>
 
             <q-item clickable @click="saveBundle()">
               <q-item-section avatar>
                 <q-icon :name="mdiContentSaveOutline" />
               </q-item-section>
-              <q-item-section>Save as bundle</q-item-section>
+              <q-item-section>
+                <q-item-label>Save as bundle</q-item-label>
+                <q-item-label caption>
+                  Ctrl+S
+                </q-item-label>
+              </q-item-section>
             </q-item>
 
             <q-separator />
@@ -173,6 +183,7 @@ import { useBundleHandling } from "./composables/bundle-handling"
 import { usePdfRendering } from "./composables/pdf-rendering"
 import { readonly, ref } from "vue"
 import { getBaseRenderData } from "@/models/render-data-base"
+import { QFile } from "quasar"
 
 const pageSizes = Object.values(EnumRenderOptionsPageFormat)
 const templateEngines = Object.values(EnumRenderTemplateDataTemplateEngine)
@@ -199,11 +210,16 @@ const {
 
 const { bundleFileInputModel, saveBundle } = useBundleHandling(renderTemplateData)
 
-const loadEmptyData = () => {
+const uploadBundle = ref<QFile>()
+function loadBundle() {
+  uploadBundle.value?.$el.click()
+}
+
+function loadEmptyData() {
   Object.assign(renderTemplateData, getBaseRenderData(true))
 }
 
-const loadSampleData = () => {
+function loadSampleData() {
   Object.assign(renderTemplateData, getBaseRenderData())
 }
 

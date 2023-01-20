@@ -19,7 +19,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-
+  server: {
+    port: 5176,
+  },
   /* remove the need to specify .vue files https://vitejs.dev/config/#resolve-extensions
   resolve: {
     extensions: [

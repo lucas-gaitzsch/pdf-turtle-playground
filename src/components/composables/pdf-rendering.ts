@@ -77,6 +77,8 @@ export function usePdfRendering() {
   // initial rendering and watch
   const debounce = createDebounce()
   watch(renderTemplateData, () => debounce(() => requestPdf(), 1000))
+  watch(secret, () => debounce(() => requestPdf(), 1000))
+  watch(serverUrl, () => debounce(() => requestPdf(), 1000))
 
   return {
     renderTemplateData,

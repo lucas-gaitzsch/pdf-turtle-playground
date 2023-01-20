@@ -1,11 +1,11 @@
 <template>
   <div class="wrapper">
-    <div><q-input v-model.number="marginProxy.top" label="top" /></div>
+    <div><q-input v-model.number="marginProxy.top" label="top (mm)" /></div>
     <div style="gap: 42px">
-      <q-input v-model.number="marginProxy.left" label="left" />
-      <q-input v-model.number="marginProxy.right" label="right" />
+      <q-input v-model.number="marginProxy.left" label="left (mm)" />
+      <q-input v-model.number="marginProxy.right" label="right (mm)" />
     </div>
-    <div><q-input v-model.number="marginProxy.bottom" label="bottom" /></div>
+    <div><q-input v-model.number="marginProxy.bottom" label="bottom (mm)" /></div>
   </div>
 </template>
 
