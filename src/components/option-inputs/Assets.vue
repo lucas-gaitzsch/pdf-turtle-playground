@@ -5,7 +5,17 @@
         <q-item-label>assets/{{ a.name }}</q-item-label>
       </q-item-section>
 
-      <q-item-section side>
+      <q-item-section side class="no-wrap" style="flex-direction: row !important">
+        <q-btn
+          class="gt-xs"
+          size="12px"
+          flat
+          dense
+          round
+          :icon="mdiClipboardOutline"
+          @click="copyPath(a.name)"
+          title="Copy asset url to clipboard"
+        />
         <q-btn
           class="gt-xs"
           size="12px"
@@ -14,6 +24,7 @@
           round
           :icon="mdiDeleteOutline"
           @click="removeAsset(a)"
+          title="Remove asset"
         />
       </q-item-section>
     </q-item>
@@ -32,9 +43,12 @@
 </template>
 
 <script setup lang="ts">
-import { mdiAttachmentPlus, mdiDeleteOutline } from "@quasar/extras/mdi-v6"
+import { mdiAttachmentPlus, mdiClipboardOutline, mdiDeleteOutline } from "@quasar/extras/mdi-v6"
 import { Asset } from "@/models/asset"
 import { ref, watch } from "vue"
+import { useQuasar } from "quasar"
+
+const quasar = useQuasar()
 
 const props = defineProps<{ modelValue: Asset[] }>()
 const emit = defineEmits<{ (event: "update:modelValue", modelValue: Asset[]): void }>()
@@ -71,4 +85,8 @@ watch(assetToAddFileInputModel, async (files) => {
     assetToAddFileInputModel.value = null
   }
 })
+
+function copyPath(name: string) {
+  navigator.clipboard.writeText(`assets/${name}`)
+}
 </script>
