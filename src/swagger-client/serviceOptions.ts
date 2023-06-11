@@ -5,7 +5,8 @@ import axiosStatic, { AxiosInstance, AxiosRequestConfig } from "axios"
 
 export interface IRequestOptions extends AxiosRequestConfig {
   /** only in axios interceptor config*/
-  loading: boolean
+  loading?: boolean
+  showError?: boolean
 }
 
 export interface IRequestConfig {
@@ -21,6 +22,7 @@ export interface ServiceOptions {
   axios?: AxiosInstance
   /** only in axios interceptor config*/
   loading: boolean
+  showError: boolean
 }
 
 // Add default options
@@ -43,7 +45,13 @@ export function axios(configs: IRequestConfig, resolve: (p: any) => void, reject
 }
 
 export function getConfigs(method: string, contentType: string, url: string, options: any): IRequestConfig {
-  const configs: IRequestConfig = { loading: serviceOptions.loading, ...options, method, url }
+  const configs: IRequestConfig = {
+    loading: serviceOptions.loading,
+    showError: serviceOptions.showError,
+    ...options,
+    method,
+    url,
+  }
   configs.headers = {
     ...options.headers,
     "Content-Type": contentType,
