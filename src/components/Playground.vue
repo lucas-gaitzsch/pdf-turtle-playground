@@ -1,6 +1,6 @@
 <template>
   <div class="layout-wrapper" @keydown.ctrl.s.prevent.stop="saveBundle()" @keydown.ctrl.o.prevent.stop="loadBundle()">
-    <q-splitter v-model="splitterModel" class="full-height" :horizontal="!$q.screen.md">
+    <q-splitter v-model="splitterModel" class="full-height" :horizontal="$q.screen.lt.md">
       <template #before>
         <div class="options-with-code-container">
           <!-- ### Options-Container ### -->

@@ -17,19 +17,19 @@ export const templateBody = `
 	<div class="cards-wrapper">
 		<div class="card" style="background-color: rgba(84,255,0,0.2)">
 			<div class="card-head">Total sales</div>
-			<div class="card-body">{{ .summery.totalSales }}</div>
+			<div class="card-body">{{ .summary.totalSales }}</div>
 		</div>
 		<div class="card">
 			<div class="card-head">Sales per week</div>
-			<div class="card-body">{{ .summery.salesPerWeek }}</div>
+			<div class="card-body">{{ .summary.salesPerWeek }}</div>
 		</div>
 		<div class="card">
 			<div class="card-head">Performance index</div>
-			<div class="card-body">{{ .summery.performanceIndex }} %</div>
+			<div class="card-body">{{ .summary.performanceIndex }} %</div>
 		</div>
 		<div class="card">
 			<div class="card-head">Sales volume last year</div>
-			<div class="card-body">{{ .summery.salesVolume }} $</div>
+			<div class="card-body">{{ .summary.salesVolume }} $</div>
 		</div>
 	</div>
 
@@ -198,7 +198,7 @@ export const model = {
     line2: [320, 132, 201, 334, 190, 130, 220],
     line3: [220, 302, 181, 234, 210, 290, 150],
   },
-  summery: {
+  summary: {
     totalSales: 32993,
     salesPerWeek: 82,
     performanceIndex: 5.132,
