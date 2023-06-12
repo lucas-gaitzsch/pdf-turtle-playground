@@ -164,6 +164,23 @@ export class RenderHtmlService {
   }
 }
 
+export class InternalsService {
+  /**
+   * Liveness probe for this service
+   */
+  static health(options: IRequestOptions = {}): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + "/health"
+
+      const configs: IRequestConfig = getConfigs("get", "multipart/form-data", url, options)
+
+      /** 适配ios13，get请求不允许带body */
+
+      axios(configs, resolve, reject)
+    })
+  }
+}
+
 export interface PageSize {
   /** in mm */
   height?: number
@@ -227,7 +244,7 @@ export interface RenderTemplateData {
   /**  */
   htmlTemplate?: string
 
-  /**  */
+  /** Model with your data matching to the templates */
   model?: object
 
   /**  */
