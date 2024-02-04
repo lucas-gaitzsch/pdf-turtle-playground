@@ -48,6 +48,7 @@ export function usePdfRendering() {
         {
           bundle: zipBlob,
           model: renderTemplateData.modelStr,
+          templateEngine: renderTemplateData.templateEngine,
         },
         {
           loading: false,
