@@ -72,9 +72,9 @@
     <q-page-container class="fit-in-view-height">
       <q-page class="fit-in-view-height">
         <router-view v-slot="{ Component }">
-          <KeepAlive>
+          <keep-alive>
             <component :is="Component" />
-          </KeepAlive>
+          </keep-alive>
         </router-view>
       </q-page>
     </q-page-container>

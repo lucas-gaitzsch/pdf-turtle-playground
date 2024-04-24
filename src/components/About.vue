@@ -1,11 +1,22 @@
-<template>Coming soon...</template>
+<template>
+  <div class="q-pa-lg">
+    <table>
+      <tr>
+        <td>Author:</td>
+        <td>Lucas Gaitzsch</td>
+      </tr>
+      <tr>
+        <td>Sourcecode and contribution:</td>
+        <td>
+          <a :href="githubUrl">{{ githubUrl }}</a>
+        </td>
+      </tr>
+    </table>
+  </div>
+</template>
 
 <script setup lang="ts">
 import { ref } from "vue"
-</script>
 
-<style scoped>
-a {
-  color: #42b983;
-}
-</style>
+const githubUrl = ref("https://github.com/lucas-gaitzsch/pdf-turtle")
+</script>
