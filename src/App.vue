@@ -71,7 +71,11 @@
 
     <q-page-container class="fit-in-view-height">
       <q-page class="fit-in-view-height">
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <KeepAlive>
+            <component :is="Component" />
+          </KeepAlive>
+        </router-view>
       </q-page>
     </q-page-container>
   </q-layout>
