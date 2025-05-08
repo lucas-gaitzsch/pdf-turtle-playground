@@ -10,7 +10,7 @@ export default defineConfig({
       template: { transformAssetUrls },
     }),
     quasar({
-      sassVariables: "src/styles/quasar-variables.scss",
+      sassVariables: "@/styles/quasar-variables.scss",
     }),
   ],
   define: { "process.env": {} },
