@@ -46,7 +46,7 @@
     "prettier": "~3.1.0",
     "sass-embedded": "^1.83.0",
     "sass-loader": "^13.3.2",
-    "swagger-axios-codegen": "~0.15.12",
+    "swagger-axios-codegen": "~0.17.0",
     "typescript": "^5.2.2",
     "vite": "^6.3.5",
     "vue-tsc": "^2.2.10"
