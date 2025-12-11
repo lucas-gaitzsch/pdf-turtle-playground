@@ -24,7 +24,7 @@
     "axios": "^1.6.1",
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
-    "monaco-editor": "^0.44.0",
+    "monaco-editor": "^0.55.0",
     "quasar": "^2.14.0",
     "uuid": "^9.0.1",
     "vue": "^3.3.8",
