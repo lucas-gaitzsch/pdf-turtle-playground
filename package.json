@@ -43,7 +43,7 @@
     "eslint": "^8.23.1",
     "eslint-plugin-vue": "^9.5.1",
     "husky": "^8.0.2",
-    "prettier": "~3.1.0",
+    "prettier": "~3.7.0",
     "sass-embedded": "^1.83.0",
     "sass-loader": "^13.3.2",
     "swagger-axios-codegen": "~0.15.12",
