@@ -49,6 +49,6 @@
     "swagger-axios-codegen": "~0.17.0",
     "typescript": "^5.2.2",
     "vite": "^6.3.5",
-    "vue-tsc": "^2.2.10"
+    "vue-tsc": "^3.0.0"
   }
 }
