@@ -28,7 +28,7 @@
     "quasar": "^2.14.0",
     "uuid": "^13.0.0",
     "vue": "^3.3.8",
-    "vue-router": "^4.2.5"
+    "vue-router": "^5.0.0"
   },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.6.0",
