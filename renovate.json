@@ -27,6 +27,11 @@
       "minimumReleaseAge": "2 days",
       "minimumReleaseAgeBehaviour": "timestamp-optional",
       "internalChecksFilter": "strict"
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true
     }
   ]
 }
