@@ -96,6 +96,49 @@
             <q-card-section class="right-container">
               <div v-if="requestTimeInMs" class="runtime-container">
                 {{ (requestTimeInMs / 1000).toFixed(1) }}s
+                <q-btn
+                  round
+                  flat
+                  dense
+                  size="sm"
+                  :icon="mdiInformationOutline"
+                  title="Render log"
+                >
+                  <q-menu class="render-log-menu">
+                    <div class="render-log-header">
+                      <strong>Render log</strong>
+                      <q-badge v-if="renderLogTruncated" color="warning" text-color="dark">
+                        truncated
+                      </q-badge>
+                    </div>
+
+                    <q-separator />
+
+                    <q-list v-if="renderLog.length" dense separator>
+                      <q-item v-for="(entry, index) in renderLog" :key="index">
+                        <q-item-section>
+                          <div class="render-log-entry-title">
+                            <q-badge outline :color="renderLogLevelColor(entry.level)">
+                              {{ entry.level }}
+                            </q-badge>
+                            <span>{{ entry.source }}</span>
+                            <span v-if="entry.timestamp" class="render-log-timestamp">{{ entry.timestamp }}</span>
+                          </div>
+                          <pre class="render-log-text">{{ entry.text }}</pre>
+                          <div v-if="entry.url || entry.line || entry.column" class="render-log-location">
+                            {{ entry.url }}
+                            <span v-if="entry.line">:{{ entry.line }}</span>
+                            <span v-if="entry.column">:{{ entry.column }}</span>
+                          </div>
+                        </q-item-section>
+                      </q-item>
+                    </q-list>
+
+                    <div v-else class="render-log-empty">
+                      No render log entries.
+                    </div>
+                  </q-menu>
+                </q-btn>
               </div>
 
               <q-btn round flat dense :icon="mdiCogOutline" title="Settings">
@@ -172,7 +215,7 @@
 </template>
 
 <script setup lang="ts">
-import { EnumRenderOptionsPageFormat, EnumRenderTemplateDataTemplateEngine } from "@/swagger-client"
+import type { RenderOptions, RenderTemplateData } from "@/swagger-client"
 import HtmlEditor from "@/components/editors/HtmlEditor.vue"
 import JsonEditor from "@/components/editors/JsonEditor.vue"
 import Margins from "@/components/option-inputs/Margins.vue"
@@ -190,6 +233,7 @@ import {
   mdiContentSaveOutline,
   mdiImageAutoAdjust,
   mdiBroom,
+  mdiInformationOutline,
 } from "@quasar/extras/mdi-v6"
 
 import { useBundleHandling } from "./composables/bundle-handling"
@@ -200,8 +244,8 @@ import { QFile } from "quasar"
 
 const splitterModel = ref(50)
 
-const pageSizes = Object.values(EnumRenderOptionsPageFormat)
-const templateEngines = Object.values(EnumRenderTemplateDataTemplateEngine)
+const pageSizes: NonNullable<RenderOptions["pageFormat"]>[] = ["A0", "A1", "A2", "A3", "A4", "A5", "A6", "Letter", "Legal"]
+const templateEngines: NonNullable<RenderTemplateData["templateEngine"]>[] = ["golang", "handlebars", "django"]
 
 const editorTabDefinitions = readonly({
   body: "body",
@@ -211,8 +255,18 @@ const editorTabDefinitions = readonly({
 })
 const editorTab = ref(editorTabDefinitions.body)
 
-const { renderTemplateData, settings, isLoading, hasError, errMsg, requestTimeInMs, pdfResponseDataUrl, requestPdf } =
-  usePdfRendering()
+const {
+  renderTemplateData,
+  settings,
+  isLoading,
+  hasError,
+  errMsg,
+  requestTimeInMs,
+  renderLog,
+  renderLogTruncated,
+  pdfResponseDataUrl,
+  requestPdf,
+} = usePdfRendering()
 
 const { bundleFileInputModel, saveBundle } = useBundleHandling(renderTemplateData)
 
@@ -227,6 +281,21 @@ function loadEmptyData() {
 
 function loadSampleData() {
   Object.assign(renderTemplateData, getBaseRenderData())
+}
+
+function renderLogLevelColor(level: string) {
+  switch (level) {
+    case "error":
+      return "negative"
+    case "warning":
+    case "warn":
+      return "warning"
+    case "info":
+    case "log":
+      return "primary"
+    default:
+      return "grey"
+  }
 }
 
 requestPdf()
@@ -280,6 +349,8 @@ requestPdf()
       align-items: center;
 
       .runtime-container {
+        display: flex;
+        align-items: center;
         text-align: right;
       }
     }
@@ -334,6 +405,46 @@ requestPdf()
         margin-bottom: -6px;
       }
     }
+  }
+}
+
+.render-log-menu {
+  width: min(640px, calc(100vw - 32px));
+  max-height: min(520px, calc(100vh - 96px));
+  overflow: auto;
+
+  .render-log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+  }
+
+  .render-log-entry-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: rgba(0, 0, 0, 0.64);
+  }
+
+  .render-log-timestamp,
+  .render-log-location {
+    color: rgba(0, 0, 0, 0.48);
+    font-size: 0.76rem;
+  }
+
+  .render-log-text {
+    margin: 6px 0 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-size: 0.82rem;
+  }
+
+  .render-log-empty {
+    padding: 18px;
+    color: rgba(0, 0, 0, 0.56);
   }
 }
 

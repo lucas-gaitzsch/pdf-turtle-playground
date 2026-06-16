@@ -37,5 +37,5 @@
     "parser": "@typescript-eslint/parser",
     "sourceType": "module"
   },
-  "ignorePatterns": ["**/swagger-client/*.ts"]
+  "ignorePatterns": ["**/swagger-client/**/*.ts"]
 }

@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { RenderOptionsMargins } from "@/swagger-client"
+import type { RenderOptionsMargins } from "@/swagger-client"
 import { ref } from "vue"
 
 const props = defineProps<{

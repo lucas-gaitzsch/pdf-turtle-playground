@@ -6,8 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "clean": "rm -rf ./app/swagger-client/**",
-    "generate-openapi-client": "node ./swagger/codegen.js",
+    "clean": "rm -rf ./src/swagger-client/**",
+    "generate-openapi-client": "openapi-ts -f ./swagger/openapi-ts.config.ts",
     "lint": "eslint \"src/**/*.{ts,vue}\"",
     "lint:fix": "eslint \"src/**/*.{ts,vue}\" --fix",
     "format": "prettier --write .",
@@ -31,6 +31,7 @@
     "vue-router": "^5.0.0"
   },
   "devDependencies": {
+    "@hey-api/openapi-ts": "^0.98.2",
     "@quasar/vite-plugin": "^1.6.0",
     "@types/file-saver": "^2.0.7",
     "@types/json-schema": "^7.0.15",
@@ -46,7 +47,6 @@
     "prettier": "~3.7.0",
     "sass-embedded": "^1.83.0",
     "sass-loader": "^16.0.0",
-    "swagger-axios-codegen": "~0.17.0",
     "typescript": "^5.2.2",
     "vite": "^7.0.0",
     "vue-tsc": "^3.0.0"

@@ -1,10 +1,5 @@
 import { model, templateBody, templateFooter, templateHeader } from "@/assets/prefill"
-import {
-  EnumRenderOptionsPageFormat,
-  EnumRenderTemplateDataTemplateEngine,
-  RenderOptions,
-  RenderTemplateData,
-} from "@/swagger-client"
+import type { RenderOptions, RenderTemplateData } from "@/swagger-client"
 import { WithRequired } from "@/utils/type-extensions"
 import { Asset } from "./asset"
 
@@ -20,7 +15,7 @@ export type RenderTemplateDataViewModel = WithRequired<RenderTemplateData, "opti
 
 export const getBaseOptions = (): RenderOptionsViewModel => ({
   landscape: false,
-  pageFormat: EnumRenderOptionsPageFormat.A4,
+  pageFormat: "A4",
   margins: {
     top: 25,
     right: 25,
@@ -30,7 +25,7 @@ export const getBaseOptions = (): RenderOptionsViewModel => ({
 })
 
 export const getBaseRenderData = (empty = false): RenderTemplateDataViewModel => ({
-  templateEngine: EnumRenderTemplateDataTemplateEngine.golang,
+  templateEngine: "golang",
   htmlTemplate: empty ? "" : templateBody,
   headerHtmlTemplate: empty ? "" : templateHeader,
   footerHtmlTemplate: empty ? "" : templateFooter,

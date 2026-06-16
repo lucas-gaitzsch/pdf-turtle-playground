@@ -9,11 +9,10 @@ import "quasar/src/css/index.sass"
 import App from "./App.vue"
 
 import "./worker/editorWorker"
-import { serviceOptions } from "./swagger-client/serviceOptions"
+import { client } from "./swagger-client/client.gen"
 import { serverBaseUrl } from "./config/server"
-import axios from "axios"
 
-serviceOptions.axios = axios.create({
+client.setConfig({
   baseURL: serverBaseUrl,
   timeout: 30000,
 })
