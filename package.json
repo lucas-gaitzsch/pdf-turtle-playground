@@ -20,7 +20,7 @@
     ]
   },
   "dependencies": {
-    "@quasar/extras": "^1.16.8",
+    "@quasar/extras": "^2.0.0",
     "axios": "^1.6.1",
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
