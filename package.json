@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "^0.98.2",
-    "@quasar/vite-plugin": "^1.6.0",
+    "@quasar/vite-plugin": "^2.0.0",
     "@types/file-saver": "^2.0.7",
     "@types/json-schema": "^7.0.15",
     "@types/jszip": "^3.4.1",
